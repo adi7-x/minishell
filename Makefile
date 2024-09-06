@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 NAME = minishell
 
 SRCS = lexer_analysis.c parsing_part_minishel.c  syntax_error.c clean_up.c \
-		check_quotes.c expande.c
+		check_quotes.c expande.c minishell.c garbage_collector.c 
 
 OBJS = $(SRCS:.c=.o)
 

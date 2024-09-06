@@ -36,10 +36,10 @@ int	syntax_error(t_lexer *lexer)
 				|| current->next->token.type != TOKEN_WORD))
 			return (1);
 		// Check for invalid tokens between commands
-		if (current->prev && current->prev->token.type != TOKEN_PIPE
-			&& current->prev->token.type != TOKEN_WORD
-			&& current->token.type != TOKEN_PIPE)
-			return (1);
+		// if (current->prev && current->prev->token.type != TOKEN_PIPE
+		// 	&& current->prev->token.type != TOKEN_WORD
+		// 	&& current->token.type != TOKEN_PIPE)
+		// 	return (1);
 		current = current->next;
 	}
 	// Check if the last token is valid
@@ -57,6 +57,8 @@ int	check_syntax_errors(t_lexer *lexer)
 	if (syntax_error(lexer))
 	{
 		printf("syntax error\n");
+		//free_lexer(lexer);
+		lexer = NULL;
 		return (1);
 	}
 	return (0);

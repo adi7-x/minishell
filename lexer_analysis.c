@@ -139,22 +139,6 @@ void	add_token(t_lexer **lexer, char *value, enum e_token_type type)
 	new->token = *token;
 	ft_lstadd_back(lexer, new);
 }
-
-void	free_env_list(t_env **env_p)
-{
-	t_env	*current_node;
-	t_env	*next_node;
-
-	current_node = *env_p;
-	while (current_node)
-	{
-		next_node = current_node->next;
-		free(current_node->name);
-		free(current_node);
-		current_node = next_node;
-	}
-	*env_p = NULL;
-}
 int	get_next_quote(char *input)
 {
 	int	i;

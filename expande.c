@@ -103,20 +103,21 @@ char	*apend_char_str(char *str, char c)
 	return (new);
 }
 
-char	*ft_getenv(t_env *env, char *str)
+char	*ft_getenv(char **env, char *str)
 {
-	int	i;
+	int		i;
+	int		j;
+	int		len;
 
-	if (!str)
-		return (NULL);
-	while (env)
+	i = -1;
+	while (env[++i])
 	{
-		i = 0;
-		while (str[i] && str[i] == env->name[i])
-			i++;
-		if (str[i] == '\0' && env->name[i] == '\0')
-			return (env->value);
-		env = env->next;
+		j = 0;
+		len = strlen(str);
+		while (env[i][j] && env[i][j] == str[j] && j < len)
+			j++;
+		if (j == len && env[i][j] == '=')
+			return (strdup(env[i] + j + 1));
 	}
 	return (NULL);
 }
@@ -136,7 +137,7 @@ char	*expend_it(char *var, char *newstr, t_env *envp)
 
 */
 
-char	*expend_it(char *var, char *newstr, t_env *envp)
+char	*expend_it(char *var, char *newstr, char **envp)
 {
 	int		j;
 	char	*path;
@@ -256,7 +257,7 @@ char	*ft_expending_word(char *str, t_env *envp)
 }
 */
 
-char	*ft_expending_word(char *str, t_env *envp)
+char	*ft_expending_word(char *str, char **envp)
 {
 	int		i;
 	t_var	var;
@@ -285,7 +286,7 @@ char	*ft_expending_word(char *str, t_env *envp)
 			var.newstr = apend_char_str(var.newstr, str[i++]);
 		else if (str[i] == '$' && str[i + 1] == '?' && !var.sinqot)
 		{
-			temp = ft_itoa(g_exit_status);
+			temp = ft_itoa(g_global.exit_number);
 			var.newstr = ft_strjoinn(var.newstr, temp);
 			free(temp);
 			i += 2;
@@ -329,7 +330,7 @@ int	expander(t_lexer *lexer_output, t_env *envp)
 
 */
 
-int	expander(t_lexer *lexer_output, t_env *envp)
+int	expander(t_lexer *lexer_output, char **envp)
 {
 	t_lexer *current;
 	char *expanded_word;

@@ -1,7 +1,6 @@
 #include "minishell.h"
 
-// Global variable declaration
-int		g_exit_status = 0;
+
 
 // Existing function prototypes...
 
@@ -50,20 +49,7 @@ void	add_env_var(t_env **env, char *env_var)
 	}
 }
 
-t_env	*init_env(char **envp)
-{
-	t_env	*env;
-	int		i;
 
-	env = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		add_env_var(&env, envp[i]);
-		i++;
-	}
-	return (env);
-}
 
 char	**add_command_argument(char **cmd, char *new_arg)
 {
@@ -97,7 +83,7 @@ t_file	*add_redirection(t_file *file_list, t_lexer *current_token)
 	if (!new_file)
 		return (NULL);
 	new_file->next = NULL;
-	new_file->name = NULL;
+	new_file->file_name = NULL;
 	new_file->infile = (current_token->token.type == TOKEN_INREDIR);
 	new_file->outfile = (current_token->token.type == TOKEN_OUTREDIR);
 	new_file->append = (current_token->token.type == TOKEN_REDIR_APPEND);
@@ -105,7 +91,7 @@ t_file	*add_redirection(t_file *file_list, t_lexer *current_token)
 	// Move to the next token to get the filename
 	if (current_token->next && current_token->next->token.type == TOKEN_WORD)
 	{
-		new_file->name = strdup(current_token->next->data);
+		new_file->file_name = strdup(current_token->next->data);
 	}
 	else
 	{
@@ -173,7 +159,7 @@ t_data	*ft_parser(t_lexer *lexer_output)
 	return (data_head);
 }
 
-t_data	*parse_input(char *input, t_env *env)
+t_data	*parse_input(char *input, t_shell *shell)
 {
 	t_lexer	*lexer_output;
 	t_data	*data;
@@ -183,7 +169,7 @@ t_data	*parse_input(char *input, t_env *env)
 	lexer_analysis(input, &lexer_output);
 	if (!lexer_output)
 		return (NULL);
-	if (!expander(lexer_output, env))
+	if (!expander(lexer_output, shell->env))
 	{
 		free_lexer(lexer_output);
 		return (NULL);
@@ -225,45 +211,44 @@ t_data	*parse_input(char *input, t_env *env)
 // }
 
 // this is work but before merge the execuction part
-void	parse_and_execute(char *input, t_env *env)
-{
-	t_data	*data;
+// void	parse_and_execute(char *input, t_env *env)
+// {
+// 	t_data	*data;
 
-	data = parse_input(input, env);
-	if (!data)
-	{
-		printf("syntax error\n");
-		return ;
-	}
-	free_parsed_data(data);
-}
+// 	data = parse_input(input, env);
+// 	if (!data)
+// 	{
+// 		printf("syntax error\n");
+// 		return ;
+// 	}
+	
+// }
 
-int	main(int argc, char **argv, char **envp)
-{
-	char	*input;
-	t_env	*env;
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	char	*input;
+// 	t_env	*env;
 
-	(void)argc;
-	(void)argv;
-	env = init_env(envp);
-	// TODO: Implement setup_signals();
-	while (1)
-	{
-		input = readline("minishell$ ");
-		if (!input)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (!check_quotes(input))
-			printf("syntax error\n");
-		if (*input)
-		{
-			add_history(input);
-			parse_and_execute(input, env);
-		}
-		free(input);
-	}
-	free_env(env);
-	return (g_exit_status);
-}
+// 	(void)argc;
+// 	(void)argv;
+// 	env = init_env(envp);
+// 	// TODO: Implement setup_signals();
+// 	while (1)
+// 	{
+// 		input = readline("minishell$ ");
+// 		if (!input)
+// 		{
+// 			printf("exit\n");
+// 			break ;
+// 		}
+		
+// 		if (*input)
+// 		{
+// 			add_history(input);
+// 			parse_and_execute(input, env);
+// 		}
+// 		free(input);
+// 	}
+// 	free_env(env);
+// 	return (g_exit_status);
+// }
