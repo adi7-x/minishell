@@ -57,7 +57,7 @@ int	check_syntax_errors(t_lexer *lexer)
 	if (syntax_error(lexer))
 	{
 		printf("syntax error\n");
-		//free_lexer(lexer);
+		// free_lexer(lexer);
 		lexer = NULL;
 		return (1);
 	}

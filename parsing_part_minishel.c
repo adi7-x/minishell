@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 // Existing function prototypes...
 
 void	add_env_var(t_env **env, char *env_var)
@@ -48,8 +46,6 @@ void	add_env_var(t_env **env, char *env_var)
 		current->next = new_node;
 	}
 }
-
-
 
 char	**add_command_argument(char **cmd, char *new_arg)
 {
@@ -221,7 +217,7 @@ t_data	*parse_input(char *input, t_shell *shell)
 // 		printf("syntax error\n");
 // 		return ;
 // 	}
-	
+
 // }
 
 // int	main(int argc, char **argv, char **envp)
@@ -241,7 +237,7 @@ t_data	*parse_input(char *input, t_shell *shell)
 // 			printf("exit\n");
 // 			break ;
 // 		}
-		
+
 // 		if (*input)
 // 		{
 // 			add_history(input);
