@@ -16,24 +16,44 @@ int	get_quoted_word(t_lexer **lexer, char *input)
 	return (i);
 }
 
-int	handle_redirection(t_lexer **lexer, char *input)
+int handle_redirection(t_lexer **lexer, char *input)
 {
-	int		i;
-	char	*word;
+    int i = 0;
+    char *word;
 
-	i = 0;
-	while (input[i] == '>' || input[i] == '<')
-		i++;
-	word = malloc(i + 1);
-	if (word == NULL)
-		return (0);
-	strncpy(word, input, i);
-	word[i] = '\0';
-	if (word[0] == '>')
-		add_token(lexer, word, TOKEN_OUTREDIR);
-	else
-		add_token(lexer, word, TOKEN_INREDIR);
-	return (i);
+    if (input[i] == '>' && input[i + 1] == '>')
+    {
+        i += 2;
+        word = malloc(3);
+        if (word == NULL)
+            return (0);
+        strcpy(word, ">>");
+        add_token(lexer, word, TOKEN_REDIR_APPEND);
+    }
+    else if (input[i] == '<' && input[i + 1] == '<')
+    {
+        i += 2;
+        word = malloc(3);
+        if (word == NULL)
+            return (0);
+        strcpy(word, "<<");
+        add_token(lexer, word, TOKEN_HEREDOC);
+    }
+    else
+    {
+        while (input[i] == '>' || input[i] == '<')
+            i++;
+        word = malloc(i + 1);
+        if (word == NULL)
+            return (0);
+        strncpy(word, input, i);
+        word[i] = '\0';
+        if (word[0] == '>')
+            add_token(lexer, word, TOKEN_OUTREDIR);
+        else
+            add_token(lexer, word, TOKEN_INREDIR);
+    }
+    return (i);
 }
 int	handle_pipe(t_lexer **lexer, char *input)
 {
@@ -137,6 +157,7 @@ void	add_token(t_lexer **lexer, char *value, enum e_token_type type)
 	token->type = type;
 	token->next = NULL;
 	new->token = *token;
+	free(token);
 	ft_lstadd_back(lexer, new);
 }
 int	get_next_quote(char *input)
