@@ -56,55 +56,55 @@ char	**add_command_argument(char **cmd, char *new_arg)
 	for (i = 0; cmd && cmd[i]; i++)
 		;
 	// Allocate space for one more argument and the NULL terminator
-	new_cmd = malloc(sizeof(char *) * (i + 2));
+	new_cmd = gc_malloc(sizeof(char *) * (i + 2));
 	if (!new_cmd)
 		return (NULL);
 	// Copy the existing arguments
 	for (int j = 0; j < i; j++)
 		new_cmd[j] = cmd[j];
 	// Add the new argument
-	new_cmd[i] = strdup(new_arg);
+	new_cmd[i] = gc_strdup(new_arg);
 	new_cmd[i + 1] = NULL;
 	// Free the old cmd array (not the strings inside)
-	free(cmd);
+	gc_remove_ptr(cmd);
 	return (new_cmd);
 }
 
-t_file	*add_redirection(t_file *file_list, t_lexer *current_token)
+t_file *add_redirection(t_file *file_list, t_lexer *current_token)
 {
-	t_file	*new_file;
-	t_file	*tmp;
+    t_file *new_file;
+    t_file *tmp;
 
-	new_file = malloc(sizeof(t_file));
-	if (!new_file)
-		return (NULL);
-	new_file->next = NULL;
-	new_file->file_name = NULL;
-	new_file->infile = (current_token->token.type == TOKEN_INREDIR);
-	new_file->outfile = (current_token->token.type == TOKEN_OUTREDIR);
-	new_file->append = (current_token->token.type == TOKEN_REDIR_APPEND);
-	new_file->heredoc = (current_token->token.type == TOKEN_HEREDOC);
-	// Move to the next token to get the filename
-	if (current_token->next && current_token->next->token.type == TOKEN_WORD)
-	{
-		new_file->file_name = strdup(current_token->next->data);
-	}
-	else
-	{
-		free(new_file);
-		return (file_list); // Return the original list if there's no filename
-	}
-	// Add the new redirection to the file list
-	if (!file_list)
-		return (new_file);
-	else
-	{
-		tmp = file_list;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new_file;
-	}
-	return (file_list);
+    new_file = gc_malloc(sizeof(t_file));
+    if (!new_file)
+        return (NULL);
+    new_file->next = NULL;
+    new_file->file_name = NULL;
+    new_file->infile = (current_token->token.type == TOKEN_INREDIR);
+    new_file->outfile = (current_token->token.type == TOKEN_OUTREDIR);
+    new_file->append = (current_token->token.type == TOKEN_REDIR_APPEND);
+    new_file->heredoc = (current_token->token.type == TOKEN_HEREDOC);
+    // Move to the next token to get the filename
+    if (current_token->next && current_token->next->token.type == TOKEN_WORD)
+    {
+        new_file->file_name = gc_strdup(current_token->next->data);
+    }
+    else
+    {
+        gc_remove_ptr(new_file);
+        return (file_list); // Return the original list if there's no filename
+    }
+    // Add the new redirection to the file list
+    if (!file_list)
+        return (new_file);
+    else
+    {
+        tmp = file_list;
+        while (tmp->next)
+            tmp = tmp->next;
+        tmp->next = new_file;
+    }
+    return (file_list);
 }
 
 t_data	*ft_parser(t_lexer *lexer_output)
@@ -119,7 +119,7 @@ t_data	*ft_parser(t_lexer *lexer_output)
 	current_token = lexer_output;
 	while (current_token)
 	{
-		new_data = malloc(sizeof(t_data));
+		new_data =gc_malloc(sizeof(t_data));
 		if (!new_data)
 			return (NULL);
 		new_data->cmd = NULL;
@@ -157,12 +157,14 @@ t_data	*ft_parser(t_lexer *lexer_output)
 
 t_data	*parse_input(char *input, t_shell *shell)
 {
+	//   printf("Debug: Entering parse_input\n");
+
 	t_lexer	*lexer_output;
 	t_data	*data;
 
 	data = NULL;
 	lexer_output = NULL;
-	lexer_analysis(input, &lexer_output);
+	lexer_analysis(input, &lexer_output);	;
 	if (!lexer_output)
 		return (NULL);
 	if (!expander(lexer_output, shell->env))
@@ -177,6 +179,7 @@ t_data	*parse_input(char *input, t_shell *shell)
 		return (NULL);
 	}
 	free_lexer(lexer_output); // Clean up lexer tokens
+    // printf("Debug: Exiting parse_input\n");
 	return (data);
 }
 

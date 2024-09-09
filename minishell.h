@@ -2,13 +2,13 @@
 # define MINISHELL_H
 
 #include "minishell.h"
+#include <stdio.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
@@ -66,8 +66,6 @@ typedef struct s_file
 typedef struct t_data
 {
     char                **cmd;
-    char                *oldpwd;
-    char                *newpwd;
     t_file              *file;
     struct t_data       *next;
 }                       t_data;
@@ -109,6 +107,7 @@ typedef struct s_global
     t_gc_node *gc_list;
     int exit_number;
     int signal_received;
+    int is_main_shell;
 } t_global;
 
 extern t_global g_global;
@@ -148,6 +147,8 @@ char                    *add_to_str(char *str, t_var var, int *i);
 char                    *ft_expending_word(char *str, char **envp); // Updated to match the definition in expande.c
 char                    *ft_itoa(int nb);
 t_data                  *parse_input(char *input, t_shell *shell);
+
+char *int_to_str(int nbr);
 
 #endif
 

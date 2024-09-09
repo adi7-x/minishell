@@ -117,7 +117,7 @@ char	*ft_getenv(char **env, char *str)
 		while (env[i][j] && env[i][j] == str[j] && j < len)
 			j++;
 		if (j == len && env[i][j] == '=')
-			return (strdup(env[i] + j + 1));
+			return (gc_strdup(env[i] + j + 1));
 	}
 	return (NULL);
 }

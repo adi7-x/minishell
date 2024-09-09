@@ -310,9 +310,9 @@ void sort_export(t_shell *shell)
             perror("gc_strdup");
             while (i > 0)
             {
-                free(env_copy[--i]);
+                gc_remove_ptr(env_copy[--i]);
             }
-            free(env_copy);
+            gc_remove_ptr(env_copy);
             return;
         }
         i++;
@@ -346,11 +346,11 @@ void sort_export(t_shell *shell)
         {
             printf("declare -x %s\n", key);
         }
-        free(key);
-        free(env_copy[i]);
+        gc_remove_ptr(key);
+        gc_remove_ptr(env_copy[i]);
         i++;
     }
-    free(env_copy);
+    gc_remove_ptr(env_copy);
 }
 
 int builtin_export(t_shell *shell, t_data *data)
@@ -373,7 +373,7 @@ int builtin_export(t_shell *shell, t_data *data)
         if (pluscase && *(pluscase + 1) != '=')
         {
             printf("bash: export: `%s': not a valid identifier\n", data->cmd[i]);
-            free(name);
+            gc_remove_ptr(name);
             g_global.exit_number = 1;
         }
         else
@@ -439,7 +439,12 @@ int builtin_env(t_shell *shell)
     {
         if (strchr(*env, '='))
         {
-            if (!(shell->ignore_path && strncmp(*env, "PATH=", 5) == 0))
+            if (shell->ignore_path ==1 && strncmp(*env, "PATH=", 5) == 0)
+            {
+                env++;
+                continue;
+            }
+            else
             {
                 write(1, *env, strlen(*env));
                 write(1, "\n", 1);
@@ -679,6 +684,7 @@ int handle_redirections(t_file *file)
     {
         if (current->infile)
         {
+            printf("entered infile\n");
             fd = open(current->file_name, O_RDONLY);
             if (fd == -1)
                 return -1;  
@@ -687,6 +693,7 @@ int handle_redirections(t_file *file)
         }
         else if (current->outfile)
         {
+            printf("entered outfile\n");
             fd = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (fd == -1)
                 return -1;  
@@ -695,6 +702,7 @@ int handle_redirections(t_file *file)
         }
         else if (current->append)
         {
+            printf("entered append\n");
             fd = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (fd == -1)
                 return -1;  
@@ -703,6 +711,7 @@ int handle_redirections(t_file *file)
         }
         else if (current->heredoc)
         {
+            printf("entered heredoc\n");
             // Handle heredoc
         }
         current = current->next;
@@ -993,17 +1002,16 @@ char **copy_env(char **envp, t_shell *shell)
             return NULL;
 
         char cwd[MAX_PATH];
-        if (getcwd(cwd, sizeof(cwd)) != NULL)
-            new_env[0] = strjoin("PWD=", cwd, "");
-        else
-            new_env[0] = gc_strdup("PWD=/");
+        getcwd(cwd, sizeof(cwd));
+        new_env[0] = strjoin("PWD=", cwd, "");
         new_env[1] = gc_strdup("SHLVL=1");
         new_env[2] = gc_strdup("_=/usr/bin/env");
         new_env[3] = gc_strdup("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
         new_env[4] = NULL;
-        shell->ignore_path = 1;
+        shell->ignore_path = 1;  
         return new_env;
     }
+
     int i, count = 0;
     char **new_env;
 
@@ -1022,9 +1030,10 @@ char **copy_env(char **envp, t_shell *shell)
     }
     new_env[count] = NULL;
 
+    shell->ignore_path = 0; 
+
     return new_env;
 }
-
 void handle_command(t_shell *shell, t_data *data)
 {
     if (data)
@@ -1109,7 +1118,7 @@ void initialize_shell(t_shell *shell, char **envp)
         perror("getcwd");
         exit(1);
     }
-    shlvl = getenv("SHLVL");
+    shlvl = ft_getenv(shell->env, "SHLVL");
     if (shlvl)
     {
         level = atoi(shlvl) + 1;
@@ -1131,6 +1140,7 @@ int main(int argc, char **argv, char **envp)
     t_shell shell;
     char *input;
 
+
     (void)argc;
     (void)argv;
     initialize_shell(&shell, envp);
@@ -1150,7 +1160,9 @@ int main(int argc, char **argv, char **envp)
         if (*input)
         {
             add_history(input);
+            // printf("Debug: Before parse_input\n");
             t_data *data = parse_input(input, &shell);
+            // printf("Debug: After parse_input\n");
             // if (data->cmd)
             // {
             //     int i = 0;
@@ -1162,17 +1174,18 @@ int main(int argc, char **argv, char **envp)
             // }
             if (data)
             {
+                // printf("Debug: Before handle_command\n");
                 handle_command(&shell, data);
+                // printf("Debug: After handle_command\n");
                 free_data(data);
+                // printf("Debug: After free_data\n");
             }
             else
             {
                 printf("syntax error1\n");
             }
-            free_parsed_data(data);
         }
         free(input);
     }
-    cleanup();
-    return (g_global.exit_number);
+    return 0;
 }
