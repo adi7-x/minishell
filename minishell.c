@@ -673,8 +673,67 @@ int execute_builtin(t_shell *shell, t_data *data)
     }
     return (1);
 }
+void heredoc_sigint_handler(int sig)
+{
+    (void)sig;
+    write(STDOUT_FILENO, "\n", 1);
+    exit(130);
+}
 
+char *get_heredoc_input(char *delimiter, t_shell *shell, int *status)
+{
+    char *line;
+    char *content = gc_strdup("");
+    int quoted_delimiter = (delimiter[0] == '\'' || delimiter[0] == '"');
+    int first_line = 1;
+    int line_count = 0;
 
+    if (quoted_delimiter)
+    {
+        delimiter = gc_strdup(delimiter + 1);
+        delimiter[strlen(delimiter) - 1] = '\0';
+    }
+
+    signal(SIGINT, heredoc_sigint_handler);
+
+    while (1)
+    {
+        line = readline("> ");
+        if (!line)
+        {
+            if (feof(stdin))
+            {
+                fprintf(stderr, "bash: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", line_count + 1, delimiter);
+                *status = 0;
+                break;
+            }
+            else
+            {
+                *status = 130;
+                gc_remove_ptr(content);
+                return NULL;
+            }
+        }
+        if (strcmp(line, delimiter) == 0)
+        {
+            free(line);
+            break;
+        }
+        if (!quoted_delimiter)
+            line = ft_expending_word(line, shell->env);
+        
+        if (!first_line)
+            content = strjoin(content, "\n", "");
+        content = strjoin(content, line, "");
+        first_line = 0;
+        line_count++;
+        free(line);
+    }
+
+    signal(SIGINT, sigint_handler);
+    *status = 0;
+    return content;
+}
 int handle_redirections(t_file *file)
 {
     int fd;
@@ -684,39 +743,36 @@ int handle_redirections(t_file *file)
     {
         if (current->infile)
         {
-            printf("entered infile\n");
             fd = open(current->file_name, O_RDONLY);
             if (fd == -1)
-                return -1;  
+                return -1;
             dup2(fd, STDIN_FILENO);
             close(fd);
         }
         else if (current->outfile)
         {
-            printf("entered outfile\n");
             fd = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (fd == -1)
-                return -1;  
+                return -1;
             dup2(fd, STDOUT_FILENO);
             close(fd);
         }
         else if (current->append)
         {
-            printf("entered append\n");
             fd = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (fd == -1)
-                return -1;  
+                return -1;
             dup2(fd, STDOUT_FILENO);
             close(fd);
         }
         else if (current->heredoc)
         {
-            printf("entered heredoc\n");
-            // Handle heredoc
+            dup2(current->fd[0], STDIN_FILENO);
+            close(current->fd[0]);
         }
         current = current->next;
     }
-    return 0; 
+    return 0;
 }
 
 char *ft_strtok(char *str, char sepa)
@@ -766,7 +822,6 @@ char *find_command(t_shell *shell, char *cmd)
         }
         i++;
     }
-
     if (!path || *path == '\0')
     {
         full_path = strjoin("./", cmd, "");
@@ -797,7 +852,38 @@ int execute_command(t_shell *shell, t_data *data)
     pid_t pid;
     int status;
     char *cmd_path;
+    int heredoc_pipe[2];
+    int heredoc_status = 0;
 
+    // Handle heredoc before forking
+    t_file *current = data->file;
+    while (current)
+    {
+        if (current->heredoc)
+        {
+            char *heredoc_content = get_heredoc_input(current->file_name, shell, &heredoc_status);
+            if (heredoc_status == 130)
+            {
+                g_global.exit_number = 130;
+                return 130;
+            }
+            if (pipe(heredoc_pipe) == -1)
+            {
+                perror("pipe");
+                return 1;
+            }
+            if (heredoc_content)
+            {
+                write(heredoc_pipe[1], heredoc_content, strlen(heredoc_content));
+                write(heredoc_pipe[1], "\n", 1);  // Add a final newline
+                gc_remove_ptr(heredoc_content);
+            }
+            close(heredoc_pipe[1]);
+            gc_remove_ptr(current->file_name);
+            current->fd[0] = heredoc_pipe[0];
+        }
+        current = current->next;
+    }
     signal(SIGINT, SIG_IGN);
     pid = fork();
     if (pid == -1)
@@ -823,7 +909,6 @@ int execute_command(t_shell *shell, t_data *data)
         }
         
         cmd_path = find_command(shell, data->cmd[0]);
-        printf("cmd_path: %s\n", cmd_path);
         if (!cmd_path)
         {
             write(STDERR_FILENO, data->cmd[0], strlen(data->cmd[0]));
@@ -833,14 +918,6 @@ int execute_command(t_shell *shell, t_data *data)
         }
         ft_setenv(shell, "_", cmd_path, 1);
         execve(cmd_path, data->cmd, shell->env);
-        if (errno == EACCES)
-        {
-            write(STDERR_FILENO, "minishell: ", 11);
-            write(STDERR_FILENO, data->cmd[0], strlen(data->cmd[0]));
-            write(STDERR_FILENO, ": Permission denied\n", 20);
-            gc_free_all();
-            exit(126);
-        }
         perror("bash");
         gc_free_all();
         exit(1);
