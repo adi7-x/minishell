@@ -673,67 +673,9 @@ int execute_builtin(t_shell *shell, t_data *data)
     }
     return (1);
 }
-void heredoc_sigint_handler(int sig)
-{
-    (void)sig;
-    write(STDOUT_FILENO, "\n", 1);
-    exit(130);
-}
 
-char *get_heredoc_input(char *delimiter, t_shell *shell, int *status)
-{
-    char *line;
-    char *content = gc_strdup("");
-    int quoted_delimiter = (delimiter[0] == '\'' || delimiter[0] == '"');
-    int first_line = 1;
-    int line_count = 0;
 
-    if (quoted_delimiter)
-    {
-        delimiter = gc_strdup(delimiter + 1);
-        delimiter[strlen(delimiter) - 1] = '\0';
-    }
 
-    signal(SIGINT, heredoc_sigint_handler);
-
-    while (1)
-    {
-        line = readline("> ");
-        if (!line)
-        {
-            if (feof(stdin))
-            {
-                fprintf(stderr, "bash: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", line_count + 1, delimiter);
-                *status = 0;
-                break;
-            }
-            else
-            {
-                *status = 130;
-                gc_remove_ptr(content);
-                return NULL;
-            }
-        }
-        if (strcmp(line, delimiter) == 0)
-        {
-            free(line);
-            break;
-        }
-        if (!quoted_delimiter)
-            line = ft_expending_word(line, shell->env);
-        
-        if (!first_line)
-            content = strjoin(content, "\n", "");
-        content = strjoin(content, line, "");
-        first_line = 0;
-        line_count++;
-        free(line);
-    }
-
-    signal(SIGINT, sigint_handler);
-    *status = 0;
-    return content;
-}
 int handle_redirections(t_file *file)
 {
     int fd;
@@ -741,7 +683,14 @@ int handle_redirections(t_file *file)
 
     while (current)
     {
-        if (current->infile)
+            if (current->heredoc)
+        {
+            // For heredoc, we need to read from the pipe
+            dup2(current->fd[0], STDIN_FILENO);
+            close(current->fd[0]);
+            close(current->fd[1]);  // Make sure to close the write end
+        }
+          if (current->infile)
         {
             fd = open(current->file_name, O_RDONLY);
             if (fd == -1)
@@ -764,11 +713,6 @@ int handle_redirections(t_file *file)
                 return -1;
             dup2(fd, STDOUT_FILENO);
             close(fd);
-        }
-        else if (current->heredoc)
-        {
-            dup2(current->fd[0], STDIN_FILENO);
-            close(current->fd[0]);
         }
         current = current->next;
     }
@@ -852,38 +796,8 @@ int execute_command(t_shell *shell, t_data *data)
     pid_t pid;
     int status;
     char *cmd_path;
-    int heredoc_pipe[2];
-    int heredoc_status = 0;
 
-    // Handle heredoc before forking
-    t_file *current = data->file;
-    while (current)
-    {
-        if (current->heredoc)
-        {
-            char *heredoc_content = get_heredoc_input(current->file_name, shell, &heredoc_status);
-            if (heredoc_status == 130)
-            {
-                g_global.exit_number = 130;
-                return 130;
-            }
-            if (pipe(heredoc_pipe) == -1)
-            {
-                perror("pipe");
-                return 1;
-            }
-            if (heredoc_content)
-            {
-                write(heredoc_pipe[1], heredoc_content, strlen(heredoc_content));
-                write(heredoc_pipe[1], "\n", 1);  // Add a final newline
-                gc_remove_ptr(heredoc_content);
-            }
-            close(heredoc_pipe[1]);
-            gc_remove_ptr(current->file_name);
-            current->fd[0] = heredoc_pipe[0];
-        }
-        current = current->next;
-    }
+   
     signal(SIGINT, SIG_IGN);
     pid = fork();
     if (pid == -1)
@@ -1217,7 +1131,6 @@ int main(int argc, char **argv, char **envp)
     t_shell shell;
     char *input;
 
-
     (void)argc;
     (void)argv;
     initialize_shell(&shell, envp);
@@ -1237,32 +1150,80 @@ int main(int argc, char **argv, char **envp)
         if (*input)
         {
             add_history(input);
-            // printf("Debug: Before parse_input\n");
             t_data *data = parse_input(input, &shell);
-            // printf("Debug: After parse_input\n");
-            // if (data->cmd)
-            // {
-            //     int i = 0;
-            //     while (data->cmd[i])
-            //     {
-            //         printf("cmd[%d]: %s\n", i, data->cmd[i]);
-            //         i++;
-            //     }
-            // }
             if (data)
             {
-                // printf("Debug: Before handle_command\n");
+                if (ft_herdoc(data, shell.env))
+                {
+                   
+                    free_data(data);
+                    free(input);
+                    continue;
+                }
                 handle_command(&shell, data);
-                // printf("Debug: After handle_command\n");
                 free_data(data);
-                // printf("Debug: After free_data\n");
             }
             else
             {
-                printf("syntax error1\n");
+                printf("syntax error\n");
             }
         }
         free(input);
+        printf("exit_number: %d\n", g_global.exit_number);
     }
-    return 0;
+    return g_global.exit_number;
 }
+// int main(int argc, char **argv, char **envp)
+// {
+//     t_shell shell;
+//     char *input;
+
+
+//     (void)argc;
+//     (void)argv;
+//     initialize_shell(&shell, envp);
+//     while (1)
+//     {
+//         g_global.signal_received = 0;
+//         input = readline("\033[1;33mminishell> \033[0m");
+//         if (!input)
+//         {
+//             printf("exit\n");
+//             break;
+//         }
+//         if (!check_quotes(input))
+//             printf("syntax error\n");
+//         if (g_global.signal_received)
+//             g_global.exit_number = 130;
+//         if (*input)
+//         {
+//             add_history(input);
+//             // printf("Debug: Before parse_input\n");
+//             t_data *data = parse_input(input, &shell);
+//             // printf("Debug: After parse_input\n");
+//             // if (data->cmd)
+//             // {
+//             //     int i = 0;
+//             //     while (data->cmd[i])
+//             //     {
+//             //         printf("cmd[%d]: %s\n", i, data->cmd[i]);
+//             //         i++;
+//             //     }
+//             // }
+//             if (data)
+//             {
+//                 // printf("Debug: Before handle_command\n");
+//                 handle_command(&shell, data);
+//                 // printf("Debug: After handle_command\n");
+//                 free_data(data);
+//                 // printf("Debug: After free_data\n");
+//             }
+//             else
+//             {
+//                 printf("syntax error1\n");
+//             }
+//         }
+//         free(input);
+//     }
+//     return 0;
+// }

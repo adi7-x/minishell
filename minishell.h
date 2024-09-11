@@ -119,6 +119,8 @@ void    gc_free_all(void);
 void    gc_remove_ptr(void *ptr);
 char    *gc_strdup(const char *s);
 
+int ft_herdoc(t_data *data, char **env);
+
 void                    free_env(t_env *env);
 void                    free_files(t_file *file);
 void                    free_commands(t_command *commands);
