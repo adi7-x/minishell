@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-// ft_strlen function:
+
 
 
 
@@ -134,12 +134,12 @@ char	*ft_itoa(int nb)
 	return (p);
 }
 
-int	ft_exit_status(t_var *var, t_env *envp)
+int	ft_exit_status(t_var *var)
 {
 	char	*str;
 	char	*s;
 
-	s = ft_itoa(envp->exit_status);
+	s = ft_itoa(g_global.exit_number);
 	str = ft_strjoinn(var->new_str[var->count], s);
 	if (var->new_str)
 		free(var->new_str[var->count]);
@@ -188,31 +188,29 @@ static int	cont_w1(const char *str)
 	}
 	return (count);
 }
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, int start, int len)
 {
-	char	*ptr;
-	size_t	j;
-	size_t	lens;
+	char	*str;
+	int	i;
 
-	j = 0;
-	lens = 0;
-	if (!s)
+	i = 0;
+	if (s == NULL)
 		return (NULL);
-	while (s[lens])
-		lens++;
-	if (len > lens - start)
-		len = lens - start;
-	if (lens <= start)
+	if (start >= ft_strlen(s))
+		return (strdup(""));
+	if (start + len > ft_strlen(s))
+		len = ft_strlen(s) - start;
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (str == NULL)
+		return (NULL);
+	i = 0;
+	while (i < len)
 	{
-		ptr = malloc(1 * sizeof(char));
-		if (!ptr)
-			return (NULL);
-		ptr[j] = '\0';
-		return (ptr);
+		str[i] = s[start + i];
+		i++;
 	}
-	ptr = ft_substr(s, start, len);
-	return (ptr);
+	str[i] = '\0';
+	return (str);
 }
 
 int	cont_w(const char *str, char c)
@@ -332,25 +330,23 @@ int	count_str(char **str)
 	return (i);
 }
 
-char	*ft_getenv(t_env *env, char *str)
+char	*ft_getenv(char **env, char *str)
 {
-	char	*s;
+	int		i;
+	int		j;
+	int		len;
 
-	s = NULL;
-	if (!str)
-		return (NULL);
-	while (env)
+	i = -1;
+	while (env[++i])
 	{
-		if (!strcmp(env->var, str))
-			s = env->value;
-		env = env->next;
+		j = 0;
+		len = strlen(str);
+		while (env[i][j] && env[i][j] == str[j] && j < len)
+			j++;
+		if (j == len && env[i][j] == '=')
+			return (gc_strdup(env[i] + j + 1));
 	}
-	if (s == NULL)
-		return (NULL);
-	s = &s[1];
-	if (*s == '\0')
-		return (NULL);
-	return (s);
+	return (NULL);
 }
 
 
@@ -438,7 +434,7 @@ char	**ft_split_it(char *str)
 	return (p);
 }
 
-void	expand_var(t_var *var, t_env *envp, int flag)
+void	expand_var(t_var *var, char **envp, int flag)
 {
     char	*path;
     char	**str1;
@@ -459,7 +455,7 @@ void	expand_var(t_var *var, t_env *envp, int flag)
     }
 }
 
-void	other_condition(t_var *var, char *str, t_env *envp, int flg)
+void	other_condition(t_var *var, char *str, char **envp, int flg)
 {
     if (str[var->i] == '$' && var->single_quote == 1 && isalpha(str[var->i + 1]))
     {
@@ -478,7 +474,7 @@ void	other_condition(t_var *var, char *str, t_env *envp, int flg)
         var->new_str[0] = apend_char_str(var->new_str[0], '\0');
 }
 
-char	**ft_expending_word(char *str, t_env *envp, int flg)
+char	**ft_expending_word(char *str, char **envp, int flg)
 {
     t_var	var;
 
@@ -500,7 +496,7 @@ char	**ft_expending_word(char *str, t_env *envp, int flg)
         if (str[var.i] == '$' && str[var.i + 1] == '\0')
             var.new_str[var.count] = apend_char_str(var.new_str[var.count], str[var.i++]);
         else if (str[var.i] == '$' && str[var.i + 1] == '?' && var.single_quote == 1)
-            var.i += ft_exit_status(&var, envp);
+            var.i += ft_exit_status(&var);
         else
             other_condition(&var, str, envp, flg);
     }
@@ -520,7 +516,7 @@ int	ft_copy(char **cmd, char **str)
 	return (i);
 }
 
-char	**ft_addstring(char **str, t_lexer *lexer, t_env *envp)
+char	**ft_addstring(char **str, t_lexer *lexer, char **envp)
 {
     int		cont;
     t_var	var;
@@ -542,7 +538,7 @@ char	**ft_addstring(char **str, t_lexer *lexer, t_env *envp)
     return (var.cmd);
 }
 
-void	append_to_file(t_lexer *lexer, int type, t_file **file, t_env *envp)
+void	append_to_file(t_lexer *lexer, int type, t_file **file, char **envp)
 {
 	t_file	*newfile;
 	char	**namefile;
@@ -594,7 +590,7 @@ void	append_to_data(t_data **data, t_file **file, char ***cmd)
 	*cmd = NULL;
 }
 
-t_data	*ft_parsing(t_lexer *lexer, t_env *envp)
+t_data	*ft_parsing(t_lexer *lexer, char **envp)
 {
     t_data	*data;
     t_var	var;
@@ -681,7 +677,7 @@ t_data *ft_parser(char *input, t_shell *shell)
 {
     t_lexer *lexer_output;
     t_data *data;
-    t_env *env_list;
+    // t_env *env_list;
 
     data = NULL;
     lexer_output = NULL;
@@ -699,18 +695,18 @@ t_data *ft_parser(char *input, t_shell *shell)
         return (NULL);
 
     // Convert char **env to t_env *
-    env_list = convert_env_to_list(shell->env);
-    if (!env_list)
-    {
-        free_lexer(lexer_output);
-        return (NULL);
-    }
-    data = ft_parsing(lexer_output, env_list);
+    //env_list = convert_env_to_list(shell->env);
+    // if (!env_list)
+    // {
+    //     free_lexer(lexer_output);
+    //     return (NULL);
+    // }
+    data = ft_parsing(lexer_output, shell->env);
 	// testing data with print tghe first cmd
 	// printf("data->cmd[0] = %s\n", data->cmd[0]);
 	// printf("data->cmd[1] = %s\n", data->cmd[1]);
     // Clean up
-    free_env_list(env_list);
+    // free_env_list(env_list);
     if (!data)
     {
         free_lexer(lexer_output);

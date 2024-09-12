@@ -116,6 +116,7 @@ typedef struct s_global
 	t_gc_node			*gc_list;
 	int					exit_number;
 	int					signal_received;
+	int					is_main_shell;
 }						t_global;
 
 extern t_global			g_global;
@@ -166,18 +167,18 @@ t_data					*parse_input(char *input, t_shell *shell);
 int						c_s_e(t_lexer *lexer);
 
 int						check_syntax_errors(t_lexer **lexer);
-char	*ft_getenv(t_env *env, char *str);
+char                    *ft_getenv(char **env, char *str);
 char	*apend_char_str(char *str, char c);
 void	add_to_str(char *str, t_var *var);
 char	*ft_strjoinn(char *s1, char *ss2);
 
 char	**ft_catstr(char **str, char **str1);
-void	expand_var(t_var *var, t_env *envp, int flag);
-void	other_condition(t_var *var, char *str, t_env *envp, int flg);
-char	**ft_expending_word(char *str, t_env *envp, int flg);
-char	**ft_addstring(char **str, t_lexer *lexer, t_env *envp);
-void	append_to_file(t_lexer *lexer, int type, t_file **file, t_env *envp);
-t_data	*ft_parsing(t_lexer *lexer, t_env *envp);
+void	expand_var(t_var *var, char **envp, int flag);
+void	other_condition(t_var *var, char *str, char **envp, int flg);
+char	**ft_expending_word(char *str, char **envp, int flg);
+char	**ft_addstring(char **str, t_lexer *lexer, char **envp);
+void	append_to_file(t_lexer *lexer, int type, t_file **file, char **envp);
+t_data	*ft_parsing(t_lexer *lexer, char **envp);
 t_data *ft_parser(char *input, t_shell *shell);
 int	count_str(char **str);
 void	ft_free1(char **str);
@@ -186,16 +187,17 @@ void	ft_ambiguous(char **namfile, t_file **file, t_file *newfile, char *s);
 int	ft_copy(char **cmd, char **str);
 int	cont_w(const char *str, char c);
 char	**ft_split(char *s, char c);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_substr(char *s, int start, int len);
 void check_word_expand(char *str,t_var *var);
 char	*ft_itoa(int nb);
-int	ft_exit_status(t_var *var, t_env *envp);
+int     ft_exit_status(t_var *var);
 int	ft_len(long nb);
 char	*ft_strsrch(char *str, char c);
 char	*remove_qout(char *str);
 void	append_to_data(t_data **data, t_file **file, char ***cmd);
 t_env *convert_env_to_list(char **env);
 void free_env_list(t_env *env_list);
+int ft_herdoc(t_data *data, char **env);
 
 
 #endif
