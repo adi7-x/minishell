@@ -1169,7 +1169,7 @@ int main(int argc, char **argv, char **envp)
             }
         }
         free(input);
-        printf("exit_number: %d\n", g_global.exit_number);
+        // printf("exit_number: %d\n", g_global.exit_number);
     }
     return g_global.exit_number;
 }
