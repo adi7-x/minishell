@@ -1,57 +1,26 @@
 #include "minishell.h"
 
-// void	free_lexer(t_lexer *lexer)
-// {
-// 	t_lexer	*current;
-// 	t_lexer	*next;
-
-// 	current = lexer;
-// 	while (current)
-// 	{
-// 		next = current->next;
-// 		gc_remove_ptr(current->data);
-// 		gc_remove_ptr(current);
-// 		current = next;
-// 	}
-// }
-void free_lexer(t_lexer *lexer)
+void	free_lexer(t_lexer *lexer)
 {
-    t_lexer *temp;
+	t_lexer	*current;
+	t_lexer	*next;
 
-    while (lexer)
-    {
-        temp = lexer;
-        lexer = lexer->next;
-        free(temp->data); 
-        free(temp);       
-    }
+	current = lexer;
+	while (current)
+	{
+		// printf("here\n");
+		next = current->next;
+		free(current->data);
+		free(current);
+		current = next;
+	}
 }
-void free_files(t_file *file)
-{
-    t_file *tmp;
 
-    while (file)
-    {
-        tmp = file;
-        file = file->next;
-        gc_remove_ptr(tmp->file_name);
-        gc_remove_ptr(tmp);
-    }
-}
-void free_parsed_data(t_data *data)
+void	free_parsed_data(t_data *data)
 {
-    t_data *tmp;
-
-    while (data)
-    {
-        tmp = data;
-        data = data->next;
-        if (tmp->cmd)
-            gc_remove_ptr(tmp->cmd);
-        if (tmp->file)
-            free_files(tmp->file);
-        gc_remove_ptr(tmp);
-    }
+	// Implement this function based on your t_data structure
+	// For now, we'll just free the data pointer itself
+	free(data);
 }
 
 void	free_env(t_env *env)
@@ -63,9 +32,9 @@ void	free_env(t_env *env)
 	while (current)
 	{
 		next = current->next;
-		gc_remove_ptr(current->name);
-		gc_remove_ptr(current->value);
-		gc_remove_ptr(current);
+		free(current->name);
+		free(current->value);
+		free(current);
 		current = next;
 	}
 }
