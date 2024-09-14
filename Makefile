@@ -1,10 +1,10 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 
 NAME = minishell
 
-SRCS = lexer_analysis.c parsing_part_minishel.c  syntax_error.c clean_up.c \
-		check_quotes.c minishell.c garbage_collector.c ft_parsing_end_expand.c ft_herdoc.c
+SRCS = lexer_analysis.c  syntax_error.c clean_up.c \
+		check_quotes.c minishell.c garbage_collector.c ft_parsing_end_expand.c ft_herdoc.c ft_expande_her.c check_file_11.c
 
 OBJS = $(SRCS:.c=.o)
 

@@ -1097,6 +1097,36 @@ char *int_to_str(int nbr)
     return str;
 }
 
+// void initialize_shell(t_shell *shell, char **envp)
+// {
+//     char *shlvl;
+//     int level;
+
+//     shell->env = copy_env(envp, shell);
+//     g_global.exit_number = 0;
+//     if (getcwd(shell->cwd, sizeof(shell->cwd)) == NULL)
+//     {
+//         perror("getcwd");
+//         exit(1);
+//     }
+//     shlvl = ft_getenv(shell->env, "SHLVL");
+//     if (shlvl)
+//     {
+//         level = atoi(shlvl) + 1;
+//         char *new_shlvl = int_to_str(level);
+//         if (new_shlvl)
+//         {
+//             ft_setenv(shell, "SHLVL", new_shlvl, 1);
+//             gc_remove_ptr(new_shlvl);
+//         }
+//     }
+//     else
+//     {
+//         ft_setenv(shell, "SHLVL", "1", 1);
+//     }
+//     setup_signals();
+// }
+
 void initialize_shell(t_shell *shell, char **envp)
 {
     char *shlvl;
@@ -1124,8 +1154,19 @@ void initialize_shell(t_shell *shell, char **envp)
     {
         ft_setenv(shell, "SHLVL", "1", 1);
     }
+
+    // Initialize var_us
+    shell->var_us.envp = convert_env_to_list(shell->env); // Convert env to t_env list
+    shell->var_us.infd = -2;
+    shell->var_us.outfd = -2;
+    // Initialize other fields of var_us as needed
+    // For example:
+    shell->var_us.id = NULL; // Assuming id is a pointer, initialize it to NULL
+    shell->var_us.n = 0; // Initialize other fields as needed
+
     setup_signals();
 }
+
 int main(int argc, char **argv, char **envp)
 {
     t_shell shell;
@@ -1144,7 +1185,11 @@ int main(int argc, char **argv, char **envp)
             break;
         }
         if (!check_quotes(input))
+        {
             printf("syntax error\n");
+            free(input);
+            continue;
+        }
         if (g_global.signal_received)
             g_global.exit_number = 130;
         if (*input)
@@ -1158,14 +1203,12 @@ int main(int argc, char **argv, char **envp)
                    
                     free_data(data);
                     free(input);
-                    continue;
+                    // continue;
                 }
+                // this line for ambuguous:
+                check_file1(data, &shell.var_us);
                 handle_command(&shell, data);
                 free_data(data);
-            }
-            else
-            {
-                printf("syntax error\n");
             }
         }
         free(input);
@@ -1173,6 +1216,8 @@ int main(int argc, char **argv, char **envp)
     }
     return g_global.exit_number;
 }
+
+
 // int main(int argc, char **argv, char **envp)
 // {
 //     t_shell shell;

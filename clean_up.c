@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clean_up.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 16:07:41 by adbourji          #+#    #+#             */
+/*   Updated: 2024/09/13 16:10:20 by adbourji         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	free_lexer(t_lexer *lexer)
@@ -8,7 +20,6 @@ void	free_lexer(t_lexer *lexer)
 	current = lexer;
 	while (current)
 	{
-		// printf("here\n");
 		next = current->next;
 		free(current->data);
 		free(current);
@@ -18,8 +29,6 @@ void	free_lexer(t_lexer *lexer)
 
 void	free_parsed_data(t_data *data)
 {
-	// Implement this function based on your t_data structure
-	// For now, we'll just free the data pointer itself
 	free(data);
 }
 

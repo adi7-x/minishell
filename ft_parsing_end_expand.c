@@ -1,8 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_parsing_end_expand.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 16:07:13 by adbourji          #+#    #+#             */
+/*   Updated: 2024/09/14 12:14:57 by adbourji         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-
-
-
 
 char	*apend_char_str(char *str, char c)
 {
@@ -28,46 +36,48 @@ char	*apend_char_str(char *str, char c)
 
 void	add_to_str(char *str, t_var *var)
 {
-    if (str[var->i] == '\'' && var->double_quote == 1)
-        var->i++;
-    else if (str[var->i] == '\"' && var->single_quote == 1)
-        var->i++;
-    else if (str[var->i] == '$' && var->single_quote == 1 && var->double_quote == 1
-        && (str[var->i + 1] == '\"' || str[var->i + 1] == '\''))
-        var->i++;
-    else
-    {
-        var->new_str[var->count] = apend_char_str(var->new_str[var->count], str[var->i]);
-        var->i += 1;
-    }
+	if (str[var->i] == '\'' && var->double_quote == 1)
+		var->i++;
+	else if (str[var->i] == '\"' && var->single_quote == 1)
+		var->i++;
+	else if (str[var->i] == '$' && var->single_quote == 1
+		&& var->double_quote == 1 && (str[var->i + 1] == '\"' || str[var->i
+			+ 1] == '\''))
+		var->i++;
+	else
+	{
+		var->new_str[var->count] = apend_char_str(var->new_str[var->count],
+				str[var->i]);
+		var->i += 1;
+	}
 }
 
 char	*remove_qout(char *str)
 {
-    t_var	var;
-    char	*newstr;
+	t_var	var;
+	char	*newstr;
 
-    var.i = 0;
-    var.single_quote = 1;
-    var.double_quote = 1;
-    newstr = NULL;
-    while (str[var.i])
-    {
-        if (str[var.i] == '\'' && var.double_quote == 1)
-            var.single_quote *= (-1);
-        if (str[var.i] == '\"' && var.single_quote == 1)
-            var.double_quote *= (-1);
-        if (str[var.i] == '\'' && var.double_quote == 1)
-            ;
-        else if (str[var.i] == '\"' && var.single_quote == 1)
-            ;
-        else
-            newstr = apend_char_str(newstr, str[var.i]);
-        var.i++;
-    }
-    if (newstr == NULL)
-        newstr = apend_char_str(newstr, '\0');
-    return (newstr);
+	var.i = 0;
+	var.single_quote = 1;
+	var.double_quote = 1;
+	newstr = NULL;
+	while (str[var.i])
+	{
+		if (str[var.i] == '\'' && var.double_quote == 1)
+			var.single_quote *= (-1);
+		if (str[var.i] == '\"' && var.single_quote == 1)
+			var.double_quote *= (-1);
+		if (str[var.i] == '\'' && var.double_quote == 1)
+			;
+		else if (str[var.i] == '\"' && var.single_quote == 1)
+			;
+		else
+			newstr = apend_char_str(newstr, str[var.i]);
+		var.i++;
+	}
+	if (newstr == NULL)
+		newstr = apend_char_str(newstr, '\0');
+	return (newstr);
 }
 
 char	*ft_strsrch(char *str, char c)
@@ -148,11 +158,10 @@ int	ft_exit_status(t_var *var)
 	return (2);
 }
 
-
-
-void check_word_expand(char *str,t_var *var)
+void	check_word_expand(char *str, t_var *var)
 {
-	int i;
+	int	i;
+
 	i = 0;
 	var->flag = 0;
 	while (str[i] && str[i] != '=')
@@ -191,7 +200,7 @@ static int	cont_w1(const char *str)
 char	*ft_substr(char *s, int start, int len)
 {
 	char	*str;
-	int	i;
+	int		i;
 
 	i = 0;
 	if (s == NULL)
@@ -263,8 +272,6 @@ char	**ft_split(char *s, char c)
 	return (p);
 }
 
-
-
 void	ft_lstadd_back1(t_file **file, t_file *new)
 {
 	t_file	*tmp;
@@ -292,14 +299,14 @@ void	ft_ambiguous(char **namfile, t_file **file, t_file *newfile, char *s)
 
 void	type_file(int type, t_file *newfile)
 {
-    if (type == TOKEN_INREDIR)
-        newfile->infile = 1;
-    else if (type == TOKEN_OUTREDIR)
-        newfile->outfile = 1;
-    else if (type == TOKEN_HEREDOC)
-        newfile->heredoc = 1;
-    else if (type == TOKEN_REDIR_APPEND)
-        newfile->append = 1;
+	if (type == TOKEN_INREDIR)
+		newfile->infile = 1;
+	else if (type == TOKEN_OUTREDIR)
+		newfile->outfile = 1;
+	else if (type == TOKEN_HEREDOC)
+		newfile->heredoc = 1;
+	else if (type == TOKEN_REDIR_APPEND)
+		newfile->append = 1;
 }
 
 void	ft_free1(char **str)
@@ -332,9 +339,9 @@ int	count_str(char **str)
 
 char	*ft_getenv(char **env, char *str)
 {
-	int		i;
-	int		j;
-	int		len;
+	int	i;
+	int	j;
+	int	len;
 
 	i = -1;
 	while (env[++i])
@@ -348,10 +355,6 @@ char	*ft_getenv(char **env, char *str)
 	}
 	return (NULL);
 }
-
-
-
-
 
 char	*ft_strjoinn(char *s1, char *ss2)
 {
@@ -406,7 +409,6 @@ char	**ft_catstr(char **str, char **str1)
 	return (var.new_str);
 }
 
-
 char	**ft_split_it(char *str)
 {
 	char	**p;
@@ -436,71 +438,76 @@ char	**ft_split_it(char *str)
 
 void	expand_var(t_var *var, char **envp, int flag)
 {
-    char	*path;
-    char	**str1;
+	char	*path;
+	char	**str1;
 
-    path = ft_getenv(envp, var->var);
-    free(var->var);
-    if (path && var->single_quote == 1 && var->double_quote == 1 && (flag || var->flag))
-    {
-        str1 = ft_split_it(path);
-        var->new_str = ft_catstr(var->new_str, str1);
-        var->count = count_str(var->new_str) - 1;
-    }
-    else
-    {
-        var->str = ft_strjoinn(var->new_str[var->count], path);
-        free(var->new_str[var->count]);
-        var->new_str[var->count] = var->str;
-    }
+	path = ft_getenv(envp, var->var);
+	free(var->var);
+	if (path && var->single_quote == 1 && var->double_quote == 1 && (flag
+			|| var->flag))
+	{
+		str1 = ft_split_it(path);
+		var->new_str = ft_catstr(var->new_str, str1);
+		var->count = count_str(var->new_str) - 1;
+	}
+	else
+	{
+		var->str = ft_strjoinn(var->new_str[var->count], path);
+		free(var->new_str[var->count]);
+		var->new_str[var->count] = var->str;
+	}
 }
 
 void	other_condition(t_var *var, char *str, char **envp, int flg)
 {
-    if (str[var->i] == '$' && var->single_quote == 1 && isalpha(str[var->i + 1]))
-    {
-        while (str[++var->i] && isalnum(str[var->i]))
-            var->var = apend_char_str(var->var, str[var->i]);
-    }
-    else if (str[var->i] == '$' && isdigit(str[var->i + 1]))
-        var->i += 2;
-    else if (str[var->i] != '\0')
-        add_to_str(str, var);
-    if (var->var != NULL)
-    {
-        expand_var(var, envp, flg);
-    }
-    if (!var->new_str[0] && (var->double_quote == -1 || var->single_quote == -1))
-        var->new_str[0] = apend_char_str(var->new_str[0], '\0');
+	if (str[var->i] == '$' && var->single_quote == 1 && isalpha(str[var->i
+			+ 1]))
+	{
+		while (str[++var->i] && isalnum(str[var->i]))
+			var->var = apend_char_str(var->var, str[var->i]);
+	}
+	else if (str[var->i] == '$' && isdigit(str[var->i + 1]))
+		var->i += 2;
+	else if (str[var->i] != '\0')
+		add_to_str(str, var);
+	if (var->var != NULL)
+	{
+		expand_var(var, envp, flg);
+	}
+	if (!var->new_str[0] && (var->double_quote == -1 || var->single_quote ==
+			-1))
+		var->new_str[0] = apend_char_str(var->new_str[0], '\0');
 }
 
 char	**ft_expending_word(char *str, char **envp, int flg)
 {
-    t_var	var;
+	t_var	var;
 
-    var.i = 0;
-    var.single_quote = 1;
-    var.double_quote = 1;
-    var.count = 0;
-    var.new_str = ft_calloc(sizeof(char *), 2);
-    if (!var.new_str)
-        return (NULL);
-    check_word_expand(str, &var);
-    while (str[var.i])
-    {
-        var.var = NULL;
-        if (str[var.i] == '\'' && var.double_quote == 1)
-            var.single_quote *= (-1);
-        else if (str[var.i] == '\"' && var.single_quote == 1)
-            var.double_quote *= (-1);
-        if (str[var.i] == '$' && str[var.i + 1] == '\0')
-            var.new_str[var.count] = apend_char_str(var.new_str[var.count], str[var.i++]);
-        else if (str[var.i] == '$' && str[var.i + 1] == '?' && var.single_quote == 1)
-            var.i += ft_exit_status(&var);
-        else
-            other_condition(&var, str, envp, flg);
-    }
-    return (var.new_str);
+	var.i = 0;
+	var.single_quote = 1;
+	var.double_quote = 1;
+	var.count = 0;
+	var.new_str = ft_calloc(sizeof(char *), 2);
+	if (!var.new_str)
+		return (NULL);
+	check_word_expand(str, &var);
+	while (str[var.i])
+	{
+		var.var = NULL;
+		if (str[var.i] == '\'' && var.double_quote == 1)
+			var.single_quote *= (-1);
+		else if (str[var.i] == '\"' && var.single_quote == 1)
+			var.double_quote *= (-1);
+		if (str[var.i] == '$' && str[var.i + 1] == '\0')
+			var.new_str[var.count] = apend_char_str(var.new_str[var.count],
+					str[var.i++]);
+		else if (str[var.i] == '$' && str[var.i + 1] == '?'
+			&& var.single_quote == 1)
+			var.i += ft_exit_status(&var);
+		else
+			other_condition(&var, str, envp, flg);
+	}
+	return (var.new_str);
 }
 
 int	ft_copy(char **cmd, char **str)
@@ -518,24 +525,24 @@ int	ft_copy(char **cmd, char **str)
 
 char	**ft_addstring(char **str, t_lexer *lexer, char **envp)
 {
-    int		cont;
-    t_var	var;
+	int		cont;
+	t_var	var;
 
-    var.j = 0;
-    var.i = 0;
-    if (str && !strcmp(str[0], "export"))
-        var.new_str = ft_expending_word(lexer->data, envp, 0);
-    else
-        var.new_str = ft_expending_word(lexer->data, envp, 1);
-    cont = count_str(str) + count_str(var.new_str);
-    var.cmd = ft_calloc(sizeof(char *), cont + 1);
-    if (var.cmd == NULL)
-        return (NULL);
-    var.i = ft_copy(var.cmd, str);
-    ft_copy(&var.cmd[var.i], var.new_str);
-    ft_free1(str);
-    ft_free1(var.new_str);
-    return (var.cmd);
+	var.j = 0;
+	var.i = 0;
+	if (str && !strcmp(str[0], "export"))
+		var.new_str = ft_expending_word(lexer->data, envp, 0);
+	else
+		var.new_str = ft_expending_word(lexer->data, envp, 1);
+	cont = count_str(str) + count_str(var.new_str);
+	var.cmd = ft_calloc(sizeof(char *), cont + 1);
+	if (var.cmd == NULL)
+		return (NULL);
+	var.i = ft_copy(var.cmd, str);
+	ft_copy(&var.cmd[var.i], var.new_str);
+	ft_free1(str);
+	ft_free1(var.new_str);
+	return (var.cmd);
 }
 
 void	append_to_file(t_lexer *lexer, int type, t_file **file, char **envp)
@@ -568,7 +575,6 @@ void	append_to_file(t_lexer *lexer, int type, t_file **file, char **envp)
 
 void	append_to_data(t_data **data, t_file **file, char ***cmd)
 {
-	
 	t_data	*newdata;
 	t_data	*tmp;
 
@@ -592,127 +598,106 @@ void	append_to_data(t_data **data, t_file **file, char ***cmd)
 
 t_data	*ft_parsing(t_lexer *lexer, char **envp)
 {
-    t_data	*data;
-    t_var	var;
+	t_data	*data;
+	t_var	var;
 
-    var.lexer = lexer;
-    var.cmd = NULL;
-    data = NULL;
-    if (lexer == NULL)
-        return (NULL);
-    var.file = NULL;
-    while (lexer)
-    {
-		
-        if (lexer->type == TOKEN_WORD && lexer->prev == NULL)
-            var.cmd = ft_addstring(var.cmd, lexer, envp);
-        else if (lexer->type == TOKEN_WORD && lexer->prev->type != TOKEN_WORD
-            && lexer->prev->type != TOKEN_PIPE)
-            append_to_file(lexer, lexer->prev->type, &var.file, envp);
-        else if (lexer->type == TOKEN_PIPE)
-            append_to_data(&data, &var.file, &var.cmd);
-        else if (lexer->type == TOKEN_WORD)
-            var.cmd = ft_addstring(var.cmd, lexer, envp);
-        lexer = lexer->next;
-    }
-    append_to_data(&data, &var.file, &var.cmd);
-    free_lexer(var.lexer);
-    return (data);
+	var.lexer = lexer;
+	var.cmd = NULL;
+	data = NULL;
+	if (lexer == NULL)
+		return (NULL);
+	var.file = NULL;
+	while (lexer)
+	{
+		if (lexer->type == TOKEN_WORD && lexer->prev == NULL)
+			var.cmd = ft_addstring(var.cmd, lexer, envp);
+		else if (lexer->type == TOKEN_WORD && lexer->prev->type != TOKEN_WORD
+			&& lexer->prev->type != TOKEN_PIPE)
+			append_to_file(lexer, lexer->prev->type, &var.file, envp);
+		else if (lexer->type == TOKEN_PIPE)
+			append_to_data(&data, &var.file, &var.cmd);
+		else if (lexer->type == TOKEN_WORD)
+			var.cmd = ft_addstring(var.cmd, lexer, envp);
+		lexer = lexer->next;
+	}
+	append_to_data(&data, &var.file, &var.cmd);
+	free_lexer(var.lexer);
+	return (data);
 }
 
-t_env *convert_env_to_list(char **env)
+t_env	*convert_env_to_list(char **env)
 {
-    t_env *env_list = NULL;
-    t_env *new_node;
-    int i = 0;
+	t_env	*env_list;
+	t_env	*new_node;
+	int		i;
+	char	*equals_sign;
+	int		name_len;
 
-    while (env[i])
-    {
-        new_node = malloc(sizeof(t_env));
-        if (!new_node)
-            return NULL;  // Handle malloc failure
-
-        char *equals_sign = strchr(env[i], '=');
-        if (equals_sign)
-        {
-            int name_len = equals_sign - env[i];
-            new_node->name = strndup(env[i], name_len);
-            new_node->value = strdup(equals_sign + 1);
-            new_node->var = strdup(env[i]);  // Store the full "NAME=VALUE" string
-        }
-        else
-        {
-            new_node->name = strdup(env[i]);
-            new_node->value = strdup("");
-            new_node->var = strdup(env[i]);
-        }
-        new_node->exit_status = 0;  // Initialize exit_status
-        new_node->next = env_list;
-        env_list = new_node;
-
-        i++;
-    }
-
-    return env_list;
+	env_list = NULL;
+	i = 0;
+	while (env[i])
+	{
+		new_node = malloc(sizeof(t_env));
+		if (!new_node)
+			return (NULL);
+		equals_sign = strchr(env[i], '=');
+		if (equals_sign)
+		{
+			name_len = equals_sign - env[i];
+			new_node->name = strndup(env[i], name_len);
+			new_node->value = strdup(equals_sign + 1);
+			new_node->var = strdup(env[i]);
+		}
+		else
+		{
+			new_node->name = strdup(env[i]);
+			new_node->value = strdup("");
+			new_node->var = strdup(env[i]);
+		}
+		new_node->exit_status = 0;
+		new_node->next = env_list;
+		env_list = new_node;
+		i++;
+	}
+	return (env_list);
 }
 
-void free_env_list(t_env *env_list)
+void	free_env_list(t_env *env_list)
 {
-    t_env *current;
-    t_env *next;
+	t_env	*current;
+	t_env	*next;
 
-    current = env_list;
-    while (current)
-    {
-        next = current->next;
-        free(current->name);
-        free(current->value);
-        free(current->var);
-        free(current);
-        current = next;
-    }
+	current = env_list;
+	while (current)
+	{
+		next = current->next;
+		free(current->name);
+		free(current->value);
+		free(current->var);
+		free(current);
+		current = next;
+	}
 }
 
-t_data *ft_parser(char *input, t_shell *shell)
+t_data	*ft_parser(char *input, t_shell *shell)
 {
-    t_lexer *lexer_output;
-    t_data *data;
-    // t_env *env_list;
+	t_lexer *lexer_output;
+	t_data *data;
 
-    data = NULL;
-    lexer_output = NULL;
-    lexer_analysis(input, &lexer_output);
-	// testing lexer_output
-	// t_lexer *tmp = lexer_output;
-	// while (tmp)
-	// {
-	// 	// printf("testing lexer_output\n");
-	// 	printf("tmp->data = %s\n", tmp->data);
-	// 	tmp = tmp->next;
-	// }
+	data = NULL;
+	lexer_output = NULL;
+	lexer_analysis(input, &lexer_output);
 
-    if (!lexer_output)
-        return (NULL);
+	if (!lexer_output)
+		return (NULL);
 
-    // Convert char **env to t_env *
-    //env_list = convert_env_to_list(shell->env);
-    // if (!env_list)
-    // {
-    //     free_lexer(lexer_output);
-    //     return (NULL);
-    // }
-    data = ft_parsing(lexer_output, shell->env);
-	// testing data with print tghe first cmd
-	// printf("data->cmd[0] = %s\n", data->cmd[0]);
-	// printf("data->cmd[1] = %s\n", data->cmd[1]);
-    // Clean up
-    // free_env_list(env_list);
-    if (!data)
-    {
-        free_lexer(lexer_output);
-        return (NULL);
-    }
+	data = ft_parsing(lexer_output, shell->env);
 
-    // free_lexer(lexer_output);
-    return (data);
+	if (!data)
+	{
+		free_lexer(lexer_output);
+		return (NULL);
+	}
+
+	return (data);
 }
