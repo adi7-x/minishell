@@ -222,7 +222,7 @@ void					append_to_data(t_data **data, t_file **file,
 							char ***cmd);
 t_env					*convert_env_to_list(char **env);
 void					free_env_list(t_env *env_list);
-int						ft_herdoc(t_data *data, char **env);
+
 
 
 int	handle_input_files(t_file *new, t_var_us *var);
@@ -236,4 +236,8 @@ void	free_var(t_var_us *var);
 void	free_file(t_file *file);
 void	free_data111(t_data *data);
 void	free_envp(t_env *envp);
+
+// execution functions
+int	execute_pipeline(t_shell *shell, t_data *data);
+int						ft_herdoc(t_data *data, char **env);
 #endif

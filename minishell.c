@@ -353,81 +353,85 @@ void sort_export(t_shell *shell)
     gc_remove_ptr(env_copy);
 }
 
-int builtin_export(t_shell *shell, t_data *data)
+void	handle_valid_identifier(t_shell *shell, char *name, char *value)
 {
-    int i;
-    char *name;
-    char *value;
+	if (value && value[0] != '\0')
+	{
+		printf("DEBUG: Value is present and non-empty\n");
+		if (name[strlen(name) - 1] == '+')
+		{
+			printf("DEBUG: Append mode detected (2)\n");
+			name[strlen(name) - 1] = '\0';
+			ft_setenv(shell, name, value, 2);
+		}
+		else
+		{
+			printf("DEBUG: Normal assignment mode (1)\n");
+			ft_setenv(shell, name, value, 1);
+		}
+	}
+	else if (is_inenv(shell->env, name) < 0)
+	{
+		printf("DEBUG: Variable not in environment (0)\n");
+		if (name[strlen(name) - 1] == '+')
+			name[strlen(name) - 1] = '\0';
+		ft_setenv(shell, name, value, 0);
+	}
+	else if (is_inenv(shell->env, name) >= 0 && value && value[0] == '\0')
+	{
+		printf("DEBUG: Variable in environment, empty value (3)\n");
+		ft_setenv(shell, name, value, 3);
+	}
+	else
+	{
+		printf("DEBUG: Variable in environment, no value specified (2)\n");
+		ft_setenv(shell, name, value, 2);
+	}
+}
 
-    if (!data->cmd[1])
-    {
-        sort_export(shell);
-        return 0;
-    }
-    i = 1;
-    while (data->cmd[i])
-    {
-        name = gc_strdup(data->cmd[i]);
-        value = strchr(name, '=');
-        char *pluscase = strchr(name, '+');
-        if (pluscase && *(pluscase + 1) != '=')
-        {
-            printf("bash: export: `%s': not a valid identifier\n", data->cmd[i]);
+void	process_export_arg(t_shell *shell, char *arg)
+{
+	char	*name;
+	char	*value;
+
+	name = gc_strdup(arg);
+	value = strchr(name, '=');
+
+		if (value)
+		{
+			*value = '\0';
+			value++;
+			printf("DEBUG: Separated name=%s, value=%s\n", name, value);
+		}
+		if (!is_valid_identifier(name))
+		{
+            if(value)
+                gc_remove_ptr(value);
             gc_remove_ptr(name);
-            g_global.exit_number = 1;
-        }
-        else
-        {
-            if (value)
-            {
-                *value = '\0';
-                value++;
-            }
+	        g_global.exit_number = 1;
+			printf("bash: export: `%s': not a valid identifier\n", arg);
+		}
+		else
+			handle_valid_identifier(shell, name, value);
+}
 
-            if (!is_valid_identifier(name))
-            {
-                printf("bash: export: `%s': not a valid identifier\n", data->cmd[i]);
-            }
-            else
-            {
-                if (value && value[0] != '\0')
-                {
-                    if (name[strlen(name) - 1] == '+')
-                    {
-                        printf("there is key and value\n");
-                        name[strlen(name) - 1] = '\0';
-                        ft_setenv(shell, name, value, 2);
-                    }
-                    else
-                    {
-                        printf("just =\n");
-                        ft_setenv(shell, name, value, 1);
-                    }
-                }
+int	builtin_export(t_shell *shell, t_data *data)
+{
+	int	i;
 
-                else if (!is_inenv(shell->env, name))
-                {
-                    printf("not in the env\n");
-                    if (name[strlen(name) - 1] == '+')
-                        name[strlen(name) - 1] = '\0';
-                    ft_setenv(shell, name, value, 0);
-                }
-                else if (is_inenv(shell->env, name) && value && value[0] == '\0')
-                {
-                    printf("already in the env and the value is empty\n");
-                    ft_setenv(shell, name, value, 3);
-                }
-                else
-                {
-                    printf("already in the env or new and without = \n");
-                    ft_setenv(shell, name, value, 2);
-                }
-            }
-        }
-        i++;
-    }
-
-    return (0);
+	if (!data->cmd[1])
+	{
+		sort_export(shell);
+		return (0);
+	}
+	i = 1;
+	while (data->cmd[i])
+	{
+		printf("DEBUG: Processing argument %d: %s\n", i, data->cmd[i]);
+		process_export_arg(shell, data->cmd[i]);
+		i++;
+	}
+	return (0);
 }
 
 int builtin_env(t_shell *shell)
@@ -861,129 +865,147 @@ int execute_command(t_shell *shell, t_data *data)
     }
 }
 
-int execute_pipeline(t_shell *shell, t_data *data)
+void	exit_with_error(const char *error_msg)
 {
-    int cmd_count = 0;
-    t_data *current = data;
-    int status, last_status = 0;
-    int **pipes;
-    pid_t *pids;
-    int i = 0;
-
-    while (current)
-    {
-        cmd_count++;
-        current = current->next;
-    }
-
-    pipes = gc_malloc((cmd_count - 1) * sizeof(int *));
-    i = 0;
-    while( i < cmd_count - 1)
-    {
-        pipes[i] = gc_malloc(2 * sizeof(int));
-        pipe(pipes[i]);
-        i++;
-    }
-    pids = gc_malloc(cmd_count * sizeof(pid_t));
-
-    current = data;
-    i = 0; 
-    while(i < cmd_count)
-    {
-        pids[i] = fork();
-        if (pids[i] == 0)
-        {
-            g_global.is_main_shell = 0;
-            if (i > 0)
-            {
-                dup2(pipes[i - 1][0], STDIN_FILENO);
-            }
-            if (i < cmd_count - 1)
-            {
-                dup2(pipes[i][1], STDOUT_FILENO);
-            }
-            for (int j = 0; j < cmd_count - 1; j++)
-            {
-                close(pipes[j][0]);
-                close(pipes[j][1]);
-            }
-
-            if (current->file)
-            {
-                if (handle_redirections(current->file) == -1)
-                {
-                    write(STDERR_FILENO, "bash: ", 6);
-                    write(STDERR_FILENO, current->file->file_name, strlen(current->file->file_name));
-                    write(STDERR_FILENO, ": No such file or directory\n", 28);
-                    gc_free_all();
-                    exit(1);
-                }
-            }
-
-            if (is_builtin(current->cmd[0]))
-            {
-                int builtin_status = execute_builtin(shell, current);
-                gc_free_all();
-                exit(builtin_status);
-            }
-            else
-            {
-                char *cmd_path = find_command(shell, current->cmd[0]);
-                if (!cmd_path)
-                {
-                    write(STDERR_FILENO, "bash: ", 6);
-                    write(STDERR_FILENO, current->cmd[0], strlen(current->cmd[0]));
-                    write(STDERR_FILENO, ": command not found\n", 20);
-                    gc_free_all();
-                    exit(127);
-                }
-                execve(cmd_path, current->cmd, shell->env);
-                perror("minishell");
-                gc_free_all();
-                exit(1);
-            }
-        }
-        else if (pids[i] < 0)
-        {
-            perror("fork");
-            exit(1);
-        }
-
-        current = current->next;
-        i++;
-    }
-
-    i = 0;
-    while( i < cmd_count - 1)
-    {
-        close(pipes[i][0]);
-        close(pipes[i][1]);
-        i++;
-    }
-    i = 0; 
-    while(i < cmd_count)
-    {
-        waitpid(pids[i], &status, 0);
-        if (i == cmd_count - 1)
-        {
-            if (WIFEXITED(status))
-                last_status = WEXITSTATUS(status);
-            else if (WIFSIGNALED(status))
-                last_status = 128 + WTERMSIG(status);
-        }
-        i++;
-    }
-
-    i = 0; 
-    while (i < cmd_count - 1)
-    {
-        gc_remove_ptr(pipes[i++]);
-    }
-    gc_remove_ptr(pipes);
-    gc_remove_ptr(pids);
-
-    return last_status;
+	perror(error_msg);
+	exit(1);
 }
+int	count_commands_and_create_pipes(t_data *data, int ***pipes)
+{
+	int		count;
+	t_data	*current;
+	int		i;
+
+	count = 0;
+	current = data;
+	while (current)
+	{
+		count++;
+		current = current->next;
+	}
+
+	*pipes = gc_malloc((count - 1) * sizeof(int *));
+	i = 0;
+	while (i < count - 1)
+	{
+		(*pipes)[i] = gc_malloc(2 * sizeof(int));
+		pipe((*pipes)[i]);
+		i++;
+	}
+
+	return (count);
+}
+
+void	execute_external_command(t_shell *shell, t_data *current)
+{
+	char	*cmd_path;
+
+	cmd_path = find_command(shell, current->cmd[0]);
+	if (!cmd_path)
+	{
+		write(STDERR_FILENO, "bash: ", 6);
+		write(STDERR_FILENO, current->cmd[0], ft_strlen(current->cmd[0]));
+		write(STDERR_FILENO, ": command not found\n", 20);
+		gc_free_all();
+		exit(127);
+	}
+	execve(cmd_path, current->cmd, shell->env);
+	perror("bash");
+	gc_free_all();
+	exit(1);
+}
+
+void	close_pipes(int **pipes, int cmd_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < cmd_count - 1)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		i++;
+	}
+}
+
+void	setup_child_pipes(int **pipes, int i, int cmd_count)
+{
+	if (i > 0)
+		dup2(pipes[i - 1][0], STDIN_FILENO);
+	if (i < cmd_count - 1)
+		dup2(pipes[i][1], STDOUT_FILENO);
+	close_pipes(pipes, cmd_count);
+}
+
+void	execute_child_process(t_shell *shell, t_data *current)
+{
+	g_global.is_main_shell = 0;
+	if (current->file && handle_redirections(current->file) == -1)
+	{
+		write(STDERR_FILENO, "bash: ", 6);
+		write(STDERR_FILENO, current->file->file_name,
+			ft_strlen(current->file->file_name));
+		write(STDERR_FILENO, ": No such file or directory\n", 28);
+		gc_free_all();
+		exit(1);
+	}
+	if (is_builtin(current->cmd[0]))
+		exit(execute_builtin(shell, current));
+	else
+		execute_external_command(shell, current);
+}
+
+int	wait_for_children(pid_t *pids, int cmd_count)
+{
+	int	i;
+	int	status;
+	int	last_status;
+
+	i = 0;
+	while (i < cmd_count)
+	{
+		waitpid(pids[i], &status, 0);
+		if (i == cmd_count - 1)
+		{
+			if (WIFEXITED(status))
+				last_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				last_status = 128 + WTERMSIG(status);
+		}
+		i++;
+	}
+	return (last_status);
+}
+
+int	execute_pipeline(t_shell *shell, t_data *data)
+{
+	int		cmd_count;
+	int		**pipes;
+	pid_t	*pids;
+	t_data	*current;
+	int		i;
+
+	cmd_count = count_commands_and_create_pipes(data, &pipes);
+	pids = gc_malloc(cmd_count * sizeof(pid_t));
+	current = data;
+	i = 0;
+	while (i < cmd_count)
+	{
+		pids[i] = fork();
+		if (pids[i] == 0)
+		{
+			setup_child_pipes(pipes, i, cmd_count);
+			execute_child_process(shell, current);
+		}
+		else if (pids[i] < 0)
+			exit_with_error("fork");
+		current = current->next;
+		i++;
+	}
+	close_pipes(pipes, cmd_count);
+	return (wait_for_children(pids, cmd_count));
+}
+
 char **copy_env(char **envp, t_shell *shell)
 {
     if (!envp || !*envp)
@@ -1097,36 +1119,6 @@ char *int_to_str(int nbr)
     return str;
 }
 
-// void initialize_shell(t_shell *shell, char **envp)
-// {
-//     char *shlvl;
-//     int level;
-
-//     shell->env = copy_env(envp, shell);
-//     g_global.exit_number = 0;
-//     if (getcwd(shell->cwd, sizeof(shell->cwd)) == NULL)
-//     {
-//         perror("getcwd");
-//         exit(1);
-//     }
-//     shlvl = ft_getenv(shell->env, "SHLVL");
-//     if (shlvl)
-//     {
-//         level = atoi(shlvl) + 1;
-//         char *new_shlvl = int_to_str(level);
-//         if (new_shlvl)
-//         {
-//             ft_setenv(shell, "SHLVL", new_shlvl, 1);
-//             gc_remove_ptr(new_shlvl);
-//         }
-//     }
-//     else
-//     {
-//         ft_setenv(shell, "SHLVL", "1", 1);
-//     }
-//     setup_signals();
-// }
-
 void initialize_shell(t_shell *shell, char **envp)
 {
     char *shlvl;
@@ -1218,57 +1210,3 @@ int main(int argc, char **argv, char **envp)
 }
 
 
-// int main(int argc, char **argv, char **envp)
-// {
-//     t_shell shell;
-//     char *input;
-
-
-//     (void)argc;
-//     (void)argv;
-//     initialize_shell(&shell, envp);
-//     while (1)
-//     {
-//         g_global.signal_received = 0;
-//         input = readline("\033[1;33mminishell> \033[0m");
-//         if (!input)
-//         {
-//             printf("exit\n");
-//             break;
-//         }
-//         if (!check_quotes(input))
-//             printf("syntax error\n");
-//         if (g_global.signal_received)
-//             g_global.exit_number = 130;
-//         if (*input)
-//         {
-//             add_history(input);
-//             // printf("Debug: Before parse_input\n");
-//             t_data *data = parse_input(input, &shell);
-//             // printf("Debug: After parse_input\n");
-//             // if (data->cmd)
-//             // {
-//             //     int i = 0;
-//             //     while (data->cmd[i])
-//             //     {
-//             //         printf("cmd[%d]: %s\n", i, data->cmd[i]);
-//             //         i++;
-//             //     }
-//             // }
-//             if (data)
-//             {
-//                 // printf("Debug: Before handle_command\n");
-//                 handle_command(&shell, data);
-//                 // printf("Debug: After handle_command\n");
-//                 free_data(data);
-//                 // printf("Debug: After free_data\n");
-//             }
-//             else
-//             {
-//                 printf("syntax error1\n");
-//             }
-//         }
-//         free(input);
-//     }
-//     return 0;
-// }
