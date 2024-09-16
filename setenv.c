@@ -82,4 +82,5 @@ int	ft_setenv(t_shell *shell, char *key, char *value, int overwrite)
 	shell->env = new_env;
 	return (0);
 }
+
 // 001 https://claude.ai/chat/348a0c56-8ff6-4132-b0e9-8c8e2dfe565e
