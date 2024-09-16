@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:26 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/14 21:37:18 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/16 22:15:15 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,14 @@ void	open_herdoc(t_file *newfile, char **env)
 			break ;
 		if (strcmp(line, newfile->file_name) == 0)
 		{
-			free(line);
+			gc_remove_ptr(line);
 			free_herdoc_and_exit(0, NULL);
 		}
 		line = apend_char_str(line, '\n');
 		if (!newfile->expand)
 		    line = expending_herd(line, env);
 		write(newfile->fd[1], line, strlen(line));
-		free(line);
+		gc_remove_ptr(line);
 	}
 	if (line == NULL)
 	{

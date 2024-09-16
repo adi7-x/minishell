@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:59 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/13 16:08:02 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/16 22:15:15 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*gc_malloc(size_t size)
 		new_node = malloc(sizeof(t_gc_node));
 		if (!new_node)
 		{
-			free(ptr);
+			gc_remove_ptr(ptr);
 			return (NULL);
 		}
 		new_node->ptr = ptr;
@@ -45,9 +45,9 @@ void	gc_free_all(void)
 		next = current->next;
 		if (current->is_freed == 0)
 		{
-			free(current->ptr);
+			gc_remove_ptr(current->ptr);
 		}
-		free(current);
+		gc_remove_ptr(current);
 		current = next;
 	}
 	g_global.gc_list = NULL;
@@ -63,7 +63,7 @@ void	gc_remove_ptr(void *ptr)
 		if (current->ptr == ptr && current->is_freed == 0)
 		{
 			current->is_freed = 1;
-			free(current->ptr);
+			gc_remove_ptr(current->ptr);
 			return ;
 		}
 		current = current->next;

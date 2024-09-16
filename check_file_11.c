@@ -80,8 +80,8 @@ void free_file(t_file *file)
     {
         tmp = file->next;
         if (file->file_name)
-            free(file->file_name);
-        free(file);
+            gc_remove_ptr(file->file_name);
+        gc_remove_ptr(file);
         file = tmp;
     }
 }
@@ -94,10 +94,10 @@ void free_file(t_file *file)
 //     {
 //         tmp = envp->next;
 //         if (envp->name)
-//             free(envp->name);
+//             gc_remove_ptr(envp->name);
 //         if (envp->value)
-//             free(envp->value);
-//         free(envp);
+//             gc_remove_ptr(envp->value);
+//         gc_remove_ptr(envp);
 //         envp = tmp;
 //     }
 // }
@@ -111,7 +111,7 @@ void free_data111(t_data *data)
         tmp = data->next;
         ft_free1(data->cmd);
         free_file(data->file);
-        free(data);
+        gc_remove_ptr(data);
         data = tmp;
     }
 }
@@ -125,22 +125,50 @@ void free_envp(t_env *envp)
     {
         tmp = envp->next;
         if (envp->name)
-            free(envp->name);
+            gc_remove_ptr(envp->name);
         if (envp->value)
-            free(envp->value);
-        free(envp);
+            gc_remove_ptr(envp->value);
+        gc_remove_ptr(envp);
         envp = tmp;
     }
 }
 
-void check_file1(t_data *data, t_var_us *var)
+// int check_file1(t_data *data, t_var_us *var)
+// {
+//     if (check_file(data, var) == 1)
+//     {
+//         return ;
+//         // free_data111(data);        // if (var->envp)
+//             // free_envp(var->envp);
+//         rl_clear_history();
+//     }
+// }
+
+
+int check_file1(t_data *data, t_var_us *var)
 {
     if (check_file(data, var) == 1)
     {
-        free_data111(data);
-        if (var->envp)
-            free_envp(var->envp);
-        rl_clear_history();
-        exit(1);
+        return 1;
     }
+    return 0;
 }
+
+/*
+void	check_file1(t_data *data, t_var_us *var)
+{
+	if (check_file(data, var) == 1)
+	{
+		free_data(data);
+		free_envp(var->envp);
+		free_var(var);
+		rl_clear_history();
+		exit(1);
+	}
+}
+*/
+
+// for testing ambuigous redirect: i know 2 cases 
+// 1. ls >$not_in_env
+// 2. if i enter esspace when i am asked for heredoc like this:
+// $>cat << EOF

@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:13 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/14 12:14:57 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/16 22:16:32 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*apend_char_str(char *str, char c)
 	char	*new;
 
 	i = ft_strlen(str);
-	new = malloc(i + 2);
+	new = gc_malloc(i + 2);
 	if (!new)
 		return (NULL);
 	i = 0;
@@ -30,7 +30,7 @@ char	*apend_char_str(char *str, char c)
 	new[i++] = c;
 	new[i] = '\0';
 	if (str)
-		free(str);
+		gc_remove_ptr(str);
 	return (new);
 }
 
@@ -124,7 +124,7 @@ char	*ft_itoa(int nb)
 
 	b = nb;
 	i = ft_len(b);
-	p = malloc(i + 1);
+	p = gc_malloc(i + 1);
 	if (p == NULL)
 		return (0);
 	p[i] = '\0';
@@ -152,8 +152,8 @@ int	ft_exit_status(t_var *var)
 	s = ft_itoa(g_global.exit_number);
 	str = ft_strjoinn(var->new_str[var->count], s);
 	if (var->new_str)
-		free(var->new_str[var->count]);
-	free(s);
+		gc_remove_ptr(var->new_str[var->count]);
+	gc_remove_ptr(s);
 	var->new_str[var->count] = str;
 	return (2);
 }
@@ -186,13 +186,13 @@ static int	cont_w1(const char *str)
 	count = 0;
 	while (str[i] != '\0')
 	{
-		if (!is_whitespace(str[i]))
+		if (!is_whitespace_char(str[i]))
 		{
 			count++;
-			while (str[i] != '\0' && !is_whitespace(str[i]))
+			while (str[i] != '\0' && !is_whitespace_char(str[i]))
 				i++;
 		}
-		else if (is_whitespace(str[i]))
+		else if (is_whitespace_char(str[i]))
 			i++;
 	}
 	return (count);
@@ -206,10 +206,10 @@ char	*ft_substr(char *s, int start, int len)
 	if (s == NULL)
 		return (NULL);
 	if (start >= ft_strlen(s))
-		return (strdup(""));
+		return (gc_strdup(""));
 	if (start + len > ft_strlen(s))
 		len = ft_strlen(s) - start;
-	str = (char *)malloc(sizeof(char) * (len + 1));
+	str = (char *)gc_malloc(sizeof(char) * (len + 1));
 	if (str == NULL)
 		return (NULL);
 	i = 0;
@@ -254,7 +254,7 @@ char	**ft_split(char *s, char c)
 
 	n = 0;
 	i = 0;
-	p = (char **)malloc((cont_w(s, c) + 1) * sizeof(char *));
+	p = (char **)gc_malloc((cont_w(s, c) + 1) * sizeof(char *));
 	if (!p)
 		return (NULL);
 	while (s != NULL && s[i] != '\0')
@@ -318,10 +318,10 @@ void	ft_free1(char **str)
 	i = 0;
 	while (str[i])
 	{
-		free(str[i]);
+		gc_remove_ptr(str[i]);
 		i++;
 	}
-	free(str);
+	gc_remove_ptr(str);
 }
 int	count_str(char **str)
 {
@@ -366,14 +366,14 @@ char	*ft_strjoinn(char *s1, char *ss2)
 		return (NULL);
 	if (!s1)
 	{
-		result = strdup(ss2);
+		result = gc_strdup(ss2);
 		return (result);
 	}
 	if (!ss2)
-		return (strdup(s1));
+		return (gc_strdup(s1));
 	i = strlen(s1);
 	j = strlen(ss2);
-	result = ((char *)malloc(i + j + 1));
+	result = ((char *)gc_malloc(i + j + 1));
 	if (!result)
 		return (NULL);
 	memcpy(result, s1, i);
@@ -393,17 +393,17 @@ char	**ft_catstr(char **str, char **str1)
 	if (!var.new_str)
 		return (NULL);
 	while (str && str[var.i])
-		var.new_str[++var.j] = strdup(str[var.i++]);
+		var.new_str[++var.j] = gc_strdup(str[var.i++]);
 	if (var.j == -1)
 		var.j = 0;
 	var.var = ft_strjoinn(var.new_str[var.j], str1[0]);
 	if (var.new_str[var.j])
-		free(var.new_str[var.j]);
+		gc_remove_ptr(var.new_str[var.j]);
 	var.new_str[var.j] = var.var;
 	var.j++;
 	var.i = 1;
 	while (str1 && str1[var.i])
-		var.new_str[var.j++] = strdup(str1[var.i++]);
+		var.new_str[var.j++] = gc_strdup(str1[var.i++]);
 	ft_free1(str);
 	ft_free1(str1);
 	return (var.new_str);
@@ -418,17 +418,17 @@ char	**ft_split_it(char *str)
 
 	n = 0;
 	i = 0;
-	p = (char **)malloc((cont_w1(str) + 1) * sizeof(char *));
+	p = (char **)gc_malloc((cont_w1(str) + 1) * sizeof(char *));
 	if (!p)
 		return (NULL);
 	while (str != NULL && str[i] != '\0')
 	{
-		while (is_whitespace(str[i]))
+		while (is_whitespace_char(str[i]))
 			i++;
 		if (str[i] == '\0')
 			break ;
 		j = 0;
-		while (!is_whitespace(str[i]) && str[i] != '\0' && j++ >= 0)
+		while (!is_whitespace_char(str[i]) && str[i] != '\0' && j++ >= 0)
 			i++;
 		p[n++] = ft_substr(str, i - j, j);
 	}
@@ -442,7 +442,7 @@ void	expand_var(t_var *var, char **envp, int flag)
 	char	**str1;
 
 	path = ft_getenv(envp, var->var);
-	free(var->var);
+	gc_remove_ptr(var->var);
 	if (path && var->single_quote == 1 && var->double_quote == 1 && (flag
 			|| var->flag))
 	{
@@ -453,7 +453,7 @@ void	expand_var(t_var *var, char **envp, int flag)
 	else
 	{
 		var->str = ft_strjoinn(var->new_str[var->count], path);
-		free(var->new_str[var->count]);
+		gc_remove_ptr(var->new_str[var->count]);
 		var->new_str[var->count] = var->str;
 	}
 }
@@ -517,7 +517,7 @@ int	ft_copy(char **cmd, char **str)
 	i = 0;
 	while (str && str[i])
 	{
-		cmd[i] = strdup(str[i]);
+		cmd[i] = gc_strdup(str[i]);
 		i++;
 	}
 	return (i);
@@ -564,12 +564,12 @@ void	append_to_file(t_lexer *lexer, int type, t_file **file, char **envp)
 	}
 	if (!namefile[0] || count_str(namefile) > 1)
 	{
-		ft_ambiguous(namefile, file, newfile, strdup(lexer->data));
+		ft_ambiguous(namefile, file, newfile, gc_strdup(lexer->data));
 		return ;
 	}
 	type_file(type, newfile);
 	newfile->file_name = namefile[0];
-	free(namefile);
+	gc_remove_ptr(namefile);
 	ft_lstadd_back1(file, newfile);
 }
 
@@ -637,7 +637,7 @@ t_env	*convert_env_to_list(char **env)
 	i = 0;
 	while (env[i])
 	{
-		new_node = malloc(sizeof(t_env));
+		new_node = gc_malloc(sizeof(t_env));
 		if (!new_node)
 			return (NULL);
 		equals_sign = strchr(env[i], '=');
@@ -645,14 +645,14 @@ t_env	*convert_env_to_list(char **env)
 		{
 			name_len = equals_sign - env[i];
 			new_node->name = strndup(env[i], name_len);
-			new_node->value = strdup(equals_sign + 1);
-			new_node->var = strdup(env[i]);
+			new_node->value = gc_strdup(equals_sign + 1);
+			new_node->var = gc_strdup(env[i]);
 		}
 		else
 		{
-			new_node->name = strdup(env[i]);
-			new_node->value = strdup("");
-			new_node->var = strdup(env[i]);
+			new_node->name = gc_strdup(env[i]);
+			new_node->value = gc_strdup("");
+			new_node->var = gc_strdup(env[i]);
 		}
 		new_node->exit_status = 0;
 		new_node->next = env_list;
@@ -671,15 +671,15 @@ void	free_env_list(t_env *env_list)
 	while (current)
 	{
 		next = current->next;
-		free(current->name);
-		free(current->value);
-		free(current->var);
-		free(current);
+		gc_remove_ptr(current->name);
+		gc_remove_ptr(current->value);
+		gc_remove_ptr(current->var);
+		gc_remove_ptr(current);
 		current = next;
 	}
 }
 
-t_data	*ft_parser(char *input, t_shell *shell)
+t_data	*process_input(char *input, t_shell *shell)
 {
 	t_lexer *lexer_output;
 	t_data *data;

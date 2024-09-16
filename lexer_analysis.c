@@ -6,22 +6,22 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:02:17 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/13 16:08:05 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/16 22:12:24 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_token(char c, int *singl, int *doubl)
+int is_token_character(char c, int *single_quote_state, int *double_quote_state)
 {
-	if (c == '\'' && *doubl != -1)
-		*singl *= -1;
-	if (c == '\"' && *singl != -1)
-		*doubl *= -1;
-	if (ft_strsrch("()&;<>|\t\v\n ", c) && (*singl != -1 && *doubl != -1))
-		return (0);
-	else
-		return (1);
+    if (c == '\'' && *double_quote_state != -1)
+        *single_quote_state *= -1;
+    if (c == '\"' && *single_quote_state != -1)
+        *double_quote_state *= -1;
+    if (ft_strsrch("()&;<>|\t\v\n ", c) && (*single_quote_state != -1 && *double_quote_state != -1))
+        return (0);
+    else
+        return (1);
 }
 
 char	*ft_strncpy(char *dest, char *src, int size)
@@ -38,7 +38,7 @@ char	*ft_strncpy(char *dest, char *src, int size)
 	return (dest);
 }
 
-int	is_whitespace(char c)
+int	is_whitespace_char(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f')
 		return (1);
@@ -51,7 +51,7 @@ void	*ft_calloc(size_t count, size_t size)
 
 	if (count != 0 && size > SIZE_MAX / count)
 		return (0);
-	p = malloc(count * size);
+	p = gc_malloc(count * size);
 	if (p == NULL)
 		return (NULL);
 	memset(p, 0, count * size);
@@ -90,43 +90,43 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-void	apend_in_struct(t_lexer **lexer, char *str, int type)
+void append_token_to_lexer(t_lexer **lexer, char *token_data, int token_type)
 {
-	t_lexer	*new_lexer;
-	int		len;
+    t_lexer *new_token;
+    int token_length;
 
-	len = ft_strlen(str);
-	if (type == TOKEN_INREDIR && len == 2)
-		type = TOKEN_HEREDOC;
-	else if (type == TOKEN_OUTREDIR && len == 2)
-		type = TOKEN_REDIR_APPEND;
-	new_lexer = ft_calloc(sizeof(t_lexer), 1);
-	if (new_lexer == NULL)
-		return ;
-	new_lexer->data = str;
-	new_lexer->type = type;
-	ft_lstadd_back(lexer, new_lexer);
+    token_length = ft_strlen(token_data);
+    if (token_type == TOKEN_INREDIR && token_length == 2)
+        token_type = TOKEN_HEREDOC;
+    else if (token_type == TOKEN_OUTREDIR && token_length == 2)
+        token_type = TOKEN_REDIR_APPEND;
+    new_token = ft_calloc(sizeof(t_lexer), 1);
+    if (new_token == NULL)
+        return;
+    new_token->data = token_data;
+    new_token->type = token_type;
+    ft_lstadd_back(lexer, new_token);
 }
 
-#include "minishell.h"
 
-int	ft_outred(t_lexer **lexer, char *len)
+
+int handle_output_redirection(t_lexer **lexer, char *input)
 {
-	int		i;
-	char	*str;
+    int i;
+    char *redirection_str;
 
-	i = 0;
-	while (len[i] == '>')
-		i++;
-	str = malloc(i + 1);
-	if (str == NULL)
-		return (0);
-	ft_strncpy(str, len, i);
-	apend_in_struct(lexer, str, TOKEN_OUTREDIR);
-	return (i);
+    i = 0;
+    while (input[i] == '>')
+        i++;
+    redirection_str = gc_malloc(i + 1);
+    if (redirection_str == NULL)
+        return (0);
+    ft_strncpy(redirection_str, input, i);
+    append_token_to_lexer(lexer, redirection_str, TOKEN_OUTREDIR);
+    return (i);
 }
 
-int	ft_inreder(t_lexer **lexer, char *len)
+int	handle_input_redirection(t_lexer **lexer, char *len)
 {
 	int		i;
 	char	*str;
@@ -134,15 +134,15 @@ int	ft_inreder(t_lexer **lexer, char *len)
 	i = 0;
 	while (len[i] == '<')
 		i++;
-	str = malloc(i + 1);
+	str = gc_malloc(i + 1);
 	if (str == NULL)
 		return (0);
 	ft_strncpy(str, len, i);
-	apend_in_struct(lexer, str, TOKEN_INREDIR);
+	append_token_to_lexer(lexer, str, TOKEN_INREDIR);
 	return (i);
 }
 
-int	ft_pipe(t_lexer **lexer, char *len)
+int	handle_pipe(t_lexer **lexer, char *len)
 {
 	int		i;
 	char	*str;
@@ -150,15 +150,15 @@ int	ft_pipe(t_lexer **lexer, char *len)
 	i = 0;
 	while (len[i] == '|')
 		i++;
-	str = malloc(i + 1);
+	str = gc_malloc(i + 1);
 	if (str == NULL)
 		return (0);
 	ft_strncpy(str, len, i);
-	apend_in_struct(lexer, str, TOKEN_PIPE);
+	append_token_to_lexer(lexer, str, TOKEN_PIPE);
 	return (i);
 }
 
-int	ft_word(t_lexer **lexer, char *len)
+int	handle_word(t_lexer **lexer, char *len)
 {
 	int		singl;
 	int		doubl;
@@ -168,34 +168,34 @@ int	ft_word(t_lexer **lexer, char *len)
 	i = 0;
 	singl = 1;
 	doubl = 1;
-	while (len[i] && ft_token(len[i], &singl, &doubl))
+	while (len[i] && is_token_character(len[i], &singl, &doubl))
 		i++;
-	str = malloc(i + 1);
+	str = gc_malloc(i + 1);
 	if (str == NULL)
 		return (0);
 	ft_strncpy(str, len, i);
-	apend_in_struct(lexer, str, TOKEN_WORD);
+	append_token_to_lexer(lexer, str, TOKEN_WORD);
 	return (i);
 }
 
-void	lexer_analysis(char *len, t_lexer **lexer)
+void lexer_analysis(char *input, t_lexer **lexer)
 {
-	int i;
+    int i;
 
-	i = 0;
-	*lexer = NULL;
-	while (len[i])
-	{
-		if (len[i] == '>')
-			i += ft_outred(lexer, &len[i]);
-		else if (len[i] == '<')
-			i += ft_inreder(lexer, &len[i]);
-		else if (len[i] == '|')
-			i += ft_pipe(lexer, &len[i]);
-		else if (is_whitespace(len[i]))
-			i++;
-		else
-			i += ft_word(lexer, &len[i]);
-	}
-	check_syntax_errors(lexer);
+    i = 0;
+    *lexer = NULL;
+    while (input[i])
+    {
+        if (input[i] == '>')
+            i += handle_output_redirection(lexer, &input[i]);
+        else if (input[i] == '<')
+            i += handle_input_redirection(lexer, &input[i]);
+        else if (input[i] == '|')
+            i += handle_pipe(lexer, &input[i]);
+        else if (is_whitespace_char(input[i]))
+            i++;
+        else
+            i += handle_word(lexer, &input[i]);
+    }
+    check_syntax_errors(lexer);
 }

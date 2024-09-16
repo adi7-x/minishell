@@ -8,8 +8,8 @@ int	ft_exit_statu(t_var *var)
 	s = ft_itoa(g_global.exit_number);
 	str = ft_strjoinn(var->str, s);
 	if (var->str)
-		free(var->str);
-	free(s);
+		gc_remove_ptr(var->str);
+	gc_remove_ptr(s);
 	var->str = str;
 	return (2);
 }
@@ -35,10 +35,10 @@ void	other_conditio(t_var *var, char *str, char **envp)
 	if (var->var != NULL)
 	{
 		path = ft_getenv(envp, var->var);
-		free(var->var);
+		gc_remove_ptr(var->var);
 		s = ft_strjoinn(var->str, path);
 		if (var->str)
-			free(var->str);
+			gc_remove_ptr(var->str);
 		var->str = s;
 	}
 }
@@ -60,6 +60,6 @@ char	*expending_herd(char *str, char **env)
 			break ;
 		other_conditio(&var, str, env);
 	}
-	free(str);
+	gc_remove_ptr(str);
 	return (var.str);
 }

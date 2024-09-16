@@ -1195,52 +1195,58 @@ void	initialize_shell(t_shell *shell, char **envp)
 	setup_signals();
 }
 
-int	main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	t_shell	shell;
-	char	*input;
-	t_data	*data;
+    t_shell shell;
+    char *input;
 
-	(void)argc;
-	(void)argv;
-	initialize_shell(&shell, envp);
-	while (1)
-	{
-		g_global.signal_received = 0;
-		input = readline("\033[1;33mminishell> \033[0m");
-		if (!input)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (!check_quotes(input))
-		{
-			printf("syntax error\n");
-			free(input);
-			continue ;
-		}
-		if (g_global.signal_received)
-			g_global.exit_number = 130;
-		if (*input)
-		{
-			add_history(input);
-			data = ft_parser(input, &shell);
-			if (data)
-			{
-				if (ft_herdoc(data, shell.env))
-				{
-					free_data(data);
-					free(input);
-					// continue ;
-				}
-				// this line for ambuguous:
-				check_file1(data, &shell.var_us);
-				handle_command(&shell, data);
-				free_data(data);
-			}
-		}
-		free(input);
-		// printf("exit_number: %d\n", g_global.exit_number);
-	}
-	return (g_global.exit_number);
+    (void)argc;
+    (void)argv;
+    initialize_shell(&shell, envp);
+    while (1)
+    {
+        g_global.signal_received = 0;
+        input = readline("\033[1;33mminishell> \033[0m");
+        if (!input)
+        {
+            printf("exit\n");
+            break;
+        }
+        if (!check_quotes(input))
+        {
+            printf("syntax error\n");
+            gc_remove_ptr(input);
+            continue;
+        }
+        if (g_global.signal_received)
+            g_global.exit_number = 130;
+        if (*input)
+        {
+            add_history(input);
+            t_data *data = process_input(input, &shell);
+            if (data)
+            {
+                if (ft_herdoc(data, shell.env))
+                {
+                   
+                    free_data(data);
+                    gc_remove_ptr(input);
+                    // continue;
+                }
+                // this line for ambuguous:
+                if (check_file1(data, &shell.var_us)== 1)
+                {
+                    free_data(data);
+                    gc_remove_ptr(input);
+                    continue;
+                }
+                handle_command(&shell, data);
+                free_data(data);
+            }
+        }
+        gc_remove_ptr(input);
+        // printf("exit_number: %d\n", g_global.exit_number);
+		gc_free_all();
+    }
+    return g_global.exit_number;
 }

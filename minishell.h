@@ -171,7 +171,7 @@ int						extract_word(t_lexer **lexer, char *input);
 void					ft_lstadd_back(t_lexer **lst, t_lexer *new);
 void					add_token(t_lexer **lexer, char *value, int type);
 int						get_next_quote(char *input);
-void					lexer_analysis(char *input, t_lexer **lexer);
+void 					lexer_analysis(char *input, t_lexer **lexer);
 void					free_lexer(t_lexer *lexer);
 void					free_parsed_data(t_data *data);
 int						check_quotes(char *str);
@@ -202,7 +202,7 @@ char					**ft_addstring(char **str, t_lexer *lexer, char **envp);
 void					append_to_file(t_lexer *lexer, int type, t_file **file,
 							char **envp);
 t_data					*ft_parsing(t_lexer *lexer, char **envp);
-t_data					*ft_parser(char *input, t_shell *shell);
+t_data	*process_input(char *input, t_shell *shell);
 int						count_str(char **str);
 void					ft_free1(char **str);
 void					ft_ambiguous(char **namfile, t_file **file,
@@ -222,14 +222,14 @@ void					append_to_data(t_data **data, t_file **file,
 							char ***cmd);
 t_env					*convert_env_to_list(char **env);
 void					free_env_list(t_env *env_list);
+int						ft_herdoc(t_data *data, char **env);
 
-
-
+int check_file1(t_data *data, t_var_us *var);
 int	handle_input_files(t_file *new, t_var_us *var);
 int	handle_output_files(t_file *new, t_var_us *var);
 int	handle_ambiguous_redirect(t_file *new);
 int	check_file(t_data *data, t_var_us *var);
-void	check_file1(t_data *data, t_var_us *var);
+// void	check_file1(t_data *data, t_var_us *var);
 
 
 void	free_var(t_var_us *var);
@@ -237,7 +237,18 @@ void	free_file(t_file *file);
 void	free_data111(t_data *data);
 void	free_envp(t_env *envp);
 
-// execution functions
-int	execute_pipeline(t_shell *shell, t_data *data);
-int						ft_herdoc(t_data *data, char **env);
+int is_token_character(char c, int *single_quote_state, int *double_quote_state);
+char	*ft_strncpy(char *dest, char *src, int size);
+int	is_whitespace_char(char c);
+
+void	*ft_calloc(size_t count, size_t size);
+void	ft_lstadd_back(t_lexer **lst, t_lexer *new);
+int	ft_strlen(char *str);
+void append_token_to_lexer(t_lexer **lexer, char *token_data, int token_type);
+int handle_output_redirection(t_lexer **lexer, char *input);
+int	handle_input_redirection(t_lexer **lexer, char *len);
+int	handle_pipe(t_lexer **lexer, char *len);
+int	handle_word(t_lexer **lexer, char *len);
+void lexer_analysis(char *input, t_lexer **lexer);
+
 #endif
