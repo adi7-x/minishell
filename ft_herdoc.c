@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_herdoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:26 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/16 22:15:15 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:19:50 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	free_herdoc_and_exit(int exit_s, char *str)
 	if (str)
 		printf("%s\n", str);
 	clear_history();
+	cleanup();
 	exit(exit_s);
 }
 
@@ -65,7 +66,6 @@ void	open_herdoc(t_file *newfile, char **env)
 {
 	char	*line;
 
-	(void)env;
 	signal(SIGINT, handle_heredoc_signal);
 	while (1)
 	{

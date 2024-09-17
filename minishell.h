@@ -225,11 +225,11 @@ t_env					*convert_env_to_list(char **env);
 void					free_env_list(t_env *env_list);
 int						ft_herdoc(t_data *data, char **env);
 
-int check_file1(t_data *data, t_var_us *var);
-int	handle_input_files(t_file *new, t_var_us *var);
-int	handle_output_files(t_file *new, t_var_us *var);
+int check_file1(t_data *data);
+// int	handle_input_files(t_file *new, t_var_us *var);
+// int	handle_output_files(t_file *new, t_var_us *var);
 int	handle_ambiguous_redirect(t_file *new);
-int	check_file(t_data *data, t_var_us *var);
+int	check_file(t_data *data);
 // void	check_file1(t_data *data, t_var_us *var);
 
 
@@ -251,5 +251,7 @@ int	handle_input_redirection(t_lexer **lexer, char *len);
 int	handle_pipe(t_lexer **lexer, char *len);
 int	handle_word(t_lexer **lexer, char *len);
 void lexer_analysis(char *input, t_lexer **lexer);
+
+void	cleanup(void);
 
 #endif

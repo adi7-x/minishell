@@ -1,42 +1,42 @@
 #include "minishell.h"
 
-int	handle_input_files(t_file *new, t_var_us *var)
-{
-    if (new->infile == 1)
-    {
-        if (var->infd != -2)
-            close(var->infd);
-        var->infd = open(new->file_name, O_RDONLY);
-    }
-    else if (new->heredoc == 1)
-    {
-        if (var->infd != -2)
-            close(var->infd);
-        var->infd = new->fd[0];
-    }
-    if (var->infd == -1)
-        return (1);
-    return (0);
-}
+// int	handle_input_files(t_file *new, t_var_us *var)
+// {
+//     if (new->infile == 1)
+//     {
+//         if (var->infd != -2)
+//             close(var->infd);
+//         var->infd = open(new->file_name, O_RDONLY);
+//     }
+//     else if (new->heredoc == 1)
+//     {
+//         if (var->infd != -2)
+//             close(var->infd);
+//         var->infd = new->fd[0];
+//     }
+//     if (var->infd == -1)
+//         return (1);
+//     return (0);
+// }
 
-int	handle_output_files(t_file *new, t_var_us *var)
-{
-    if (new->outfile == 1)
-    {
-        if (var->outfd != -2)
-            close(var->outfd);
-        var->outfd = open(new->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-    }
-    else if (new->append == 1)
-    {
-        if (var->outfd != -2)
-            close(var->outfd);
-        var->outfd = open(new->file_name, O_WRONLY | O_APPEND | O_CREAT, 0664);
-    }
-    if (var->outfd == -1)
-        return (1);
-    return (0);
-}
+// int	handle_output_files(t_file *new, t_var_us *var)
+// {
+//     if (new->outfile == 1)
+//     {
+//         if (var->outfd != -2)
+//             close(var->outfd);
+//         var->outfd = open(new->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+//     }
+//     else if (new->append == 1)
+//     {
+//         if (var->outfd != -2)
+//             close(var->outfd);
+//         var->outfd = open(new->file_name, O_WRONLY | O_APPEND | O_CREAT, 0664);
+//     }
+//     if (var->outfd == -1)
+//         return (1);
+//     return (0);
+// }
 
 int	handle_ambiguous_redirect(t_file *new)
 {
@@ -48,20 +48,16 @@ int	handle_ambiguous_redirect(t_file *new)
     return (0);
 }
 
-int	check_file(t_data *data, t_var_us *var)
+int	check_file(t_data *data)
 {
     t_file	*new;
 
     new = data->file;
-    var->infd = -2;
-    var->outfd = -2;
+    // var->infd = -2;
+    // var->outfd = -2;
     while (new)
     {
-        if (handle_input_files(new, var) || handle_output_files(new, var))
-        {
-            perror(new->file_name);
-            return (1);
-        }
+
         if (handle_ambiguous_redirect(new))
         {
             return (1);
@@ -145,9 +141,9 @@ void free_envp(t_env *envp)
 // }
 
 
-int check_file1(t_data *data, t_var_us *var)
+int check_file1(t_data *data)
 {
-    if (check_file(data, var) == 1)
+    if (check_file(data) == 1)
     {
         return 1;
     }

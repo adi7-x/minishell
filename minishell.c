@@ -862,6 +862,11 @@ int	execute_command(t_shell *shell, t_data *data)
 				exit(1);
 			}
 		}
+		if(data->cmd==NULL)
+		{
+			gc_free_all();
+			exit(0);
+		}
 		cmd_path = find_command(shell, data->cmd[0]);
 		if (!cmd_path)
 		{
@@ -982,6 +987,11 @@ void	execute_child_process(t_shell *shell, t_data *current)
 		write(STDERR_FILENO, ": No such file or directory\n", 28);
 		gc_free_all();
 		exit(1);
+	}
+	if (!current->cmd)
+	{
+		gc_free_all();
+		exit(0);
 	}
 	if (is_builtin(current->cmd[0]))
 		exit(execute_builtin(shell, current));
@@ -1184,14 +1194,14 @@ void	initialize_shell(t_shell *shell, char **envp)
 		ft_setenv(shell, "SHLVL", "1", 1);
 	}
 	// Initialize var_us
-	shell->var_us.envp = convert_env_to_list(shell->env);
-	// Convert env to t_env list
-	shell->var_us.infd = -2;
-	shell->var_us.outfd = -2;
-	// Initialize other fields of var_us as needed
-	// For example:
-	shell->var_us.id = NULL; // Assuming id is a pointer, initialize it to NULL
-	shell->var_us.n = 0;     // Initialize other fields as needed
+	// shell->var_us.envp = convert_env_to_list(shell->env);
+	// // Convert env to t_env list
+	// shell->var_us.infd = -2;
+	// shell->var_us.outfd = -2;
+	// // Initialize other fields of var_us as needed
+	// // For example:
+	// shell->var_us.id = NULL; // Assuming id is a pointer, initialize it to NULL
+	// shell->var_us.n = 0;     // Initialize other fields as needed
 	setup_signals();
 }
 
@@ -1234,7 +1244,7 @@ int main(int argc, char **argv, char **envp)
                     // continue;
                 }
                 // this line for ambuguous:
-                if (check_file1(data, &shell.var_us)== 1)
+                if (check_file1(data)== 1)
                 {
                     free_data(data);
                     gc_remove_ptr(input);
@@ -1246,7 +1256,7 @@ int main(int argc, char **argv, char **envp)
         }
         gc_remove_ptr(input);
         // printf("exit_number: %d\n", g_global.exit_number);
-		gc_free_all();
     }
+	cleanup();
     return g_global.exit_number;
 }
