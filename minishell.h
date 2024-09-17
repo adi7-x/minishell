@@ -156,6 +156,7 @@ void					*gc_malloc(size_t size);
 void					gc_free_all(void);
 void					gc_remove_ptr(void *ptr);
 char					*gc_strdup(const char *s);
+char *gc_strndup(const char *s, size_t n);
 
 void					free_env(t_env *env);
 void					free_files(t_file *file);
