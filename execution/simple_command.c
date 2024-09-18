@@ -6,18 +6,35 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:36:16 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 11:07:58 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 17:49:57 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exit_with_error(char *error_msg)
+void    ft_handle_execve_error(char *path)
 {
-	perror(error_msg);
+    if (access(path, F_OK) == 0)
+    {
+        if (access(path, X_OK) == 0)
+        {
+            write(2, path, ft_strlen(path));
+            write(2, ": is a directory\n", 18);
+				gc_free_all();
+            exit(126);
+        }
+		else
+		{
+			write(2, path, ft_strlen(path));
+			write(2, ": Permission denied\n", 20);
+			exit(126);
+		}
+    }
+    perror(path);
 	gc_free_all();
-	exit(1);
+    exit(127);
 }
+
 
 static char	*search_in_path(char *cmd, char *path)
 {
@@ -93,7 +110,7 @@ void	handle_child_process(t_shell *shell, t_data *data)
 	}
 	ft_setenv(shell, "_", cmd_path, 1);
 	execve(cmd_path, data->cmd, shell->env);
-	exit_with_error("bash");
+	ft_handle_execve_error(cmd_path);
 }
 
 int	execute_command(t_shell *shell, t_data *data)

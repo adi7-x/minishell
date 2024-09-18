@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parsing_end_expand.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:13 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/16 22:16:32 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/18 17:35:06 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -530,18 +530,25 @@ char	**ft_addstring(char **str, t_lexer *lexer, char **envp)
 
 	var.j = 0;
 	var.i = 0;
-	if (str && !strcmp(str[0], "export"))
-		var.new_str = ft_expending_word(lexer->data, envp, 0);
+	if (str && str[0] && lexer && lexer->data)
+	{
+		if (strcmp(str[0], "export") == 0)
+			var.new_str = ft_expending_word(lexer->data, envp, 0);
+		else
+			var.new_str = ft_expending_word(lexer->data, envp, 1);
+	}
 	else
 		var.new_str = ft_expending_word(lexer->data, envp, 1);
 	cont = count_str(str) + count_str(var.new_str);
 	var.cmd = ft_calloc(sizeof(char *), cont + 1);
 	if (var.cmd == NULL)
 		return (NULL);
-	var.i = ft_copy(var.cmd, str);
+	if (str)
+		var.i = ft_copy(var.cmd, str);
 	ft_copy(&var.cmd[var.i], var.new_str);
 	ft_free1(str);
-	ft_free1(var.new_str);
+	if (str)
+		ft_free1(str);
 	return (var.cmd);
 }
 

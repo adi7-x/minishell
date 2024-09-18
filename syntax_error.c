@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:08:15 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/14 12:16:36 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:30:35 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	check_syntax_errors(t_lexer **lexer)
 		free_lexer(*lexer);
 		*lexer = NULL;
 		printf("Syntax error\n");
+		g_global.exit_number=2;
 		return (1);
 	}
 	return (0);

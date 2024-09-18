@@ -278,4 +278,5 @@ char					*ft_strtok(char *str, char sepa);
 void					exit_with_error(char *error_msg);
 void					free_data(t_data *data);
 
+void    ft_handle_execve_error(char *path);
 #endif

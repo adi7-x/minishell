@@ -6,11 +6,18 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:51:28 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 11:07:42 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 16:16:27 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	exit_with_error(char *error_msg)
+{
+	perror(error_msg);
+	gc_free_all();
+	exit(1);
+}
 
 int	count_commands_and_create_pipes(t_data *data, int ***pipes)
 {
@@ -50,9 +57,7 @@ void	execute_external_command(t_shell *shell, t_data *current)
 		exit(127);
 	}
 	execve(cmd_path, current->cmd, shell->env);
-	perror("bash");
-	gc_free_all();
-	exit(1);
+	ft_handle_execve_error(cmd_path);
 }
 
 void	close_pipes(int **pipes, int cmd_count)

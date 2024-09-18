@@ -407,6 +407,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!check_quotes(input))
 		{
 			printf("syntax error\n");
+			g_global.exit_number = 2;
 			gc_remove_ptr(input);
 			continue ;
 		}
@@ -422,7 +423,7 @@ int	main(int argc, char **argv, char **envp)
 				{
 					free_data(data);
 					gc_remove_ptr(input);
-					// continue ;
+					 continue ;
 				}
 				// this line for ambuguous:
 				if (check_file1(data) == 1)
