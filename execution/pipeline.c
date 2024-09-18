@@ -6,17 +6,12 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:51:28 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/15 11:51:44 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 11:07:42 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	exit_with_error(const char *error_msg)
-{
-	perror(error_msg);
-	exit(1);
-}
 int	count_commands_and_create_pipes(t_data *data, int ***pipes)
 {
 	int		count;
@@ -30,7 +25,6 @@ int	count_commands_and_create_pipes(t_data *data, int ***pipes)
 		count++;
 		current = current->next;
 	}
-
 	*pipes = gc_malloc((count - 1) * sizeof(int *));
 	i = 0;
 	while (i < count - 1)
@@ -39,7 +33,6 @@ int	count_commands_and_create_pipes(t_data *data, int ***pipes)
 		pipe((*pipes)[i]);
 		i++;
 	}
-
 	return (count);
 }
 
@@ -84,7 +77,7 @@ void	setup_child_pipes(int **pipes, int i, int cmd_count)
 	close_pipes(pipes, cmd_count);
 }
 
-void	execute_child_process(t_shell *shell, t_data *current, int i)
+void	execute_child_process(t_shell *shell, t_data *current)
 {
 	g_global.is_main_shell = 0;
 	if (current->file && handle_redirections(current->file) == -1)
@@ -95,6 +88,11 @@ void	execute_child_process(t_shell *shell, t_data *current, int i)
 		write(STDERR_FILENO, ": No such file or directory\n", 28);
 		gc_free_all();
 		exit(1);
+	}
+	if (!current->cmd)
+	{
+		gc_free_all();
+		exit(0);
 	}
 	if (is_builtin(current->cmd[0]))
 		exit(execute_builtin(shell, current));
@@ -126,11 +124,11 @@ int	wait_for_children(pid_t *pids, int cmd_count)
 
 int	execute_pipeline(t_shell *shell, t_data *data)
 {
-	int		cmd_count;
-	int		**pipes;
-	pid_t	*pids;
-	t_data	*current;
-	int		i;
+	int cmd_count;
+	int **pipes;
+	pid_t *pids;
+	t_data *current;
+	int i;
 
 	cmd_count = count_commands_and_create_pipes(data, &pipes);
 	pids = gc_malloc(cmd_count * sizeof(pid_t));
@@ -142,7 +140,7 @@ int	execute_pipeline(t_shell *shell, t_data *data)
 		if (pids[i] == 0)
 		{
 			setup_child_pipes(pipes, i, cmd_count);
-			execute_child_process(shell, current, i);
+			execute_child_process(shell, current);
 		}
 		else if (pids[i] < 0)
 			exit_with_error("fork");

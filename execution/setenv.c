@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   setenv.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/18 10:22:58 by elcid             #+#    #+#             */
+/*   Updated: 2024/09/18 11:07:47 by elcid            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*create_env_entry(char *key, char *value)
 {
@@ -13,7 +23,7 @@ int	handle_append_mode(t_shell *shell, char *key, char *value, int index)
 	char	*old_value;
 	char	*new_value;
 
-	old_value = ft_strchr(shell->env[index], '=');
+	old_value = strchr(shell->env[index], '=');
 	if (old_value)
 	{
 		old_value++;
@@ -26,11 +36,10 @@ int	handle_append_mode(t_shell *shell, char *key, char *value, int index)
 	return (0);
 }
 
-int	update_existing_env(t_shell *shell, char *key, char *value,
-		int overwrite)
+int	update_existing_env(t_shell *shell, char *key, char *value, int overwrite)
 {
-	int		index;
-	int		key_len;
+	int	index;
+	int	key_len;
 
 	index = is_inenv(shell->env, key);
 	if (index >= 0)
@@ -59,9 +68,9 @@ int	ft_setenv(t_shell *shell, char *key, char *value, int overwrite)
 {
 	int		env_size;
 	char	**new_env;
-    int		i;
+	int		i;
 
-	if (ft_strncmp(key, "PATH", 4) == 0)
+	if (strncmp(key, "PATH", 4) == 0)
 		shell->ignore_path = 0;
 	if (update_existing_env(shell, key, value, overwrite) == 0)
 		return (0);

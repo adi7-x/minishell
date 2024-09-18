@@ -26,8 +26,6 @@
 // 	char				cwd[MAX_PATH];
 // }						t_shell;
 
-
-
 # define TOKEN_WORD 1
 # define TOKEN_PIPE 2
 # define TOKEN_INREDIR 3
@@ -119,34 +117,32 @@ typedef struct s_global
 	int					is_main_shell;
 }						t_global;
 
-
 typedef struct t_var_us
 {
-	int				cont_cmd;
-	char			**path;
-	char			*pth;
-	int				fd;
-	int				infd;
-	int				outfd;
-	int				**pipe;
-	int				*id;
-	int				i;
-	int				n;
-	t_env			*envp;
-}					t_var_us;
+	int					cont_cmd;
+	char				**path;
+	char				*pth;
+	int					fd;
+	int					infd;
+	int					outfd;
+	int					**pipe;
+	int					*id;
+	int					i;
+	int					n;
+	t_env				*envp;
+}						t_var_us;
 
 typedef struct s_shell
 {
-    char **env;
-    char cwd[MAX_PATH];
-    int ignore_path;
-    t_var_us var_us;  // Add this line
-} t_shell;
-
+	char				**env;
+	char				cwd[MAX_PATH];
+	int					ignore_path;
+	t_var_us var_us; // Add this line
+}						t_shell;
 
 extern t_global			g_global;
 
-char	*expending_herd(char *str, char **env);
+char					*expending_herd(char *str, char **env);
 int						ft_token(char c, int *singl, int *doubl);
 int						is_whitespace(char c);
 char					*ft_strncpy(char *dest, char *src, int size);
@@ -156,7 +152,7 @@ void					*gc_malloc(size_t size);
 void					gc_free_all(void);
 void					gc_remove_ptr(void *ptr);
 char					*gc_strdup(const char *s);
-char *gc_strndup(const char *s, size_t n);
+char					*gc_strndup(const char *s, size_t n);
 
 void					free_env(t_env *env);
 void					free_files(t_file *file);
@@ -172,16 +168,13 @@ int						extract_word(t_lexer **lexer, char *input);
 void					ft_lstadd_back(t_lexer **lst, t_lexer *new);
 void					add_token(t_lexer **lexer, char *value, int type);
 int						get_next_quote(char *input);
-void 					lexer_analysis(char *input, t_lexer **lexer);
+void					lexer_analysis(char *input, t_lexer **lexer);
 void					free_lexer(t_lexer *lexer);
 void					free_parsed_data(t_data *data);
 int						check_quotes(char *str);
 int						expander(t_lexer *lexer_output, char **env);
 
 char					*apend_char_str(char *str, char c);
-
-
-
 
 char					*ft_itoa(int nb);
 t_data					*parse_input(char *input, t_shell *shell);
@@ -203,7 +196,7 @@ char					**ft_addstring(char **str, t_lexer *lexer, char **envp);
 void					append_to_file(t_lexer *lexer, int type, t_file **file,
 							char **envp);
 t_data					*ft_parsing(t_lexer *lexer, char **envp);
-t_data	*process_input(char *input, t_shell *shell);
+t_data					*process_input(char *input, t_shell *shell);
 int						count_str(char **str);
 void					ft_free1(char **str);
 void					ft_ambiguous(char **namfile, t_file **file,
@@ -225,33 +218,64 @@ t_env					*convert_env_to_list(char **env);
 void					free_env_list(t_env *env_list);
 int						ft_herdoc(t_data *data, char **env);
 
-int check_file1(t_data *data);
+int						check_file1(t_data *data);
 // int	handle_input_files(t_file *new, t_var_us *var);
 // int	handle_output_files(t_file *new, t_var_us *var);
-int	handle_ambiguous_redirect(t_file *new);
-int	check_file(t_data *data);
+int						handle_ambiguous_redirect(t_file *new);
+int						check_file(t_data *data);
 // void	check_file1(t_data *data, t_var_us *var);
 
+void					free_var(t_var_us *var);
+void					free_file(t_file *file);
+void					free_data111(t_data *data);
+void					free_envp(t_env *envp);
 
-void	free_var(t_var_us *var);
-void	free_file(t_file *file);
-void	free_data111(t_data *data);
-void	free_envp(t_env *envp);
+int						is_token_character(char c, int *single_quote_state,
+							int *double_quote_state);
+char					*ft_strncpy(char *dest, char *src, int size);
+int						is_whitespace_char(char c);
 
-int is_token_character(char c, int *single_quote_state, int *double_quote_state);
-char	*ft_strncpy(char *dest, char *src, int size);
-int	is_whitespace_char(char c);
+void					*ft_calloc(size_t count, size_t size);
+void					ft_lstadd_back(t_lexer **lst, t_lexer *new);
+int						ft_strlen(char *str);
+void					append_token_to_lexer(t_lexer **lexer, char *token_data,
+							int token_type);
+int						handle_output_redirection(t_lexer **lexer, char *input);
+int						handle_input_redirection(t_lexer **lexer, char *len);
+int						handle_pipe(t_lexer **lexer, char *len);
+int						handle_word(t_lexer **lexer, char *len);
+void					lexer_analysis(char *input, t_lexer **lexer);
 
-void	*ft_calloc(size_t count, size_t size);
-void	ft_lstadd_back(t_lexer **lst, t_lexer *new);
-int	ft_strlen(char *str);
-void append_token_to_lexer(t_lexer **lexer, char *token_data, int token_type);
-int handle_output_redirection(t_lexer **lexer, char *input);
-int	handle_input_redirection(t_lexer **lexer, char *len);
-int	handle_pipe(t_lexer **lexer, char *len);
-int	handle_word(t_lexer **lexer, char *len);
-void lexer_analysis(char *input, t_lexer **lexer);
+// execute functions
+void					sigint_handler(int sig);
+void					setup_signals(void);
+void					handle_heredoc_signal(int sig);
 
-void	cleanup(void);
+void					free_data(t_data *data);
+void					cleanup(void);
+
+int	builtin_cd(t_shell *shell, t_data *data);
+int	builtin_pwd(t_shell *shell);
+int	builtin_unset(t_shell *shell, t_data *data);
+int	builtin_env(t_shell *shell);
+
+int	ft_unsetenv(t_shell *shell, char *name);
+int						execute_pipeline(t_shell *shell, t_data *data);
+char					*find_command(t_shell *shell, char *cmd);
+int						handle_redirections(t_file *file);
+int						is_builtin(char *cmd);
+int						execute_builtin(t_shell *shell, t_data *data);
+int						builtin_export(t_shell *shell, t_data *data);
+void					sort_export(t_shell *shell);
+int						ft_setenv(t_shell *shell, char *key, char *value,
+							int overwrite);
+int						is_inenv(char **env, char *name);
+int						custom_strcmp(char *a, char *b);
+char					*strjoin(char *s1, char *s2, char *delimiter);
+int						execute_command(t_shell *shell, t_data *data);
+char					*find_command(t_shell *shell, char *cmd);
+char					*ft_strtok(char *str, char sepa);
+void					exit_with_error(char *error_msg);
+void					free_data(t_data *data);
 
 #endif

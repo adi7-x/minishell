@@ -6,17 +6,12 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:26 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/17 13:19:50 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 11:07:32 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	handle_heredoc_signal(int sig)
-{
-	(void)sig;
-	exit(130);
-}
 void	free_herdoc_and_exit(int exit_s, char *str)
 {
 	if (str)
@@ -79,7 +74,7 @@ void	open_herdoc(t_file *newfile, char **env)
 		}
 		line = apend_char_str(line, '\n');
 		if (!newfile->expand)
-		    line = expending_herd(line, env);
+			line = expending_herd(line, env);
 		write(newfile->fd[1], line, strlen(line));
 		gc_remove_ptr(line);
 	}
@@ -91,7 +86,7 @@ void	open_herdoc(t_file *newfile, char **env)
 	}
 }
 
-int		ft_herdoc(t_data *data, char **env)
+int	ft_herdoc(t_data *data, char **env)
 {
 	t_file	*newfile;
 	int		pid;

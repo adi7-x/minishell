@@ -1,10 +1,29 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
 
 NAME = minishell
 
-SRCS = lexer_analysis.c  syntax_error.c clean_up.c \
-		check_quotes.c minishell.c garbage_collector.c ft_parsing_end_expand.c ft_herdoc.c ft_expande_her.c check_file_11.c \
+SRCS = check_file_11.c \
+      check_quotes.c \
+      clean_up.c \
+      ft_expande_her.c \
+      ft_parsing_end_expand.c \
+      lexer_analysis.c \
+      minishell.c \
+      syntax_error.c \
+      execution/export.c \
+      execution/ft_herdoc.c \
+      execution/garbage_collector.c \
+      execution/pipeline.c \
+      execution/setenv.c \
+      execution/signal_handlers.c \
+      execution/simple_command.c \
+      execution/sort_export.c \
+      execution/strcmp.c \
+	execution/cleanup_exe.c \
+      execution/builtin_cd_pwd.c \
+      execution/builtin_unset.c \
+      execution/builtin_env.c \
 	
 
 OBJS = $(SRCS:.c=.o)
