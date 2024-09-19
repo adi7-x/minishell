@@ -1,43 +1,5 @@
 #include "minishell.h"
 
-// int	handle_input_files(t_file *new, t_var_us *var)
-// {
-//     if (new->infile == 1)
-//     {
-//         if (var->infd != -2)
-//             close(var->infd);
-//         var->infd = open(new->file_name, O_RDONLY);
-//     }
-//     else if (new->heredoc == 1)
-//     {
-//         if (var->infd != -2)
-//             close(var->infd);
-//         var->infd = new->fd[0];
-//     }
-//     if (var->infd == -1)
-//         return (1);
-//     return (0);
-// }
-
-// int	handle_output_files(t_file *new, t_var_us *var)
-// {
-//     if (new->outfile == 1)
-//     {
-//         if (var->outfd != -2)
-//             close(var->outfd);
-//         var->outfd = open(new->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-//     }
-//     else if (new->append == 1)
-//     {
-//         if (var->outfd != -2)
-//             close(var->outfd);
-//         var->outfd = open(new->file_name, O_WRONLY | O_APPEND | O_CREAT, 0664);
-//     }
-//     if (var->outfd == -1)
-//         return (1);
-//     return (0);
-// }
-
 int	handle_ambiguous_redirect(t_file *new)
 {
     if (new->ambiguous == 1)
@@ -53,8 +15,6 @@ int	check_file(t_data *data)
     t_file	*new;
 
     new = data->file;
-    // var->infd = -2;
-    // var->outfd = -2;
     while (new)
     {
 
@@ -66,7 +26,6 @@ int	check_file(t_data *data)
     }
     return (0);
 }
-
 
 void free_file(t_file *file)
 {
@@ -81,22 +40,6 @@ void free_file(t_file *file)
         file = tmp;
     }
 }
-
-// void free_envp(t_env *envp)
-// {
-//     t_env *tmp;
-
-//     while (envp)
-//     {
-//         tmp = envp->next;
-//         if (envp->name)
-//             gc_remove_ptr(envp->name);
-//         if (envp->value)
-//             gc_remove_ptr(envp->value);
-//         gc_remove_ptr(envp);
-//         envp = tmp;
-//     }
-// }
 
 void free_data111(t_data *data)
 {
@@ -129,16 +72,6 @@ void free_envp(t_env *envp)
     }
 }
 
-// int check_file1(t_data *data, t_var_us *var)
-// {
-//     if (check_file(data, var) == 1)
-//     {
-//         return ;
-//         // free_data111(data);        // if (var->envp)
-//             // free_envp(var->envp);
-//         rl_clear_history();
-//     }
-// }
 
 
 int check_file1(t_data *data)
@@ -149,22 +82,3 @@ int check_file1(t_data *data)
     }
     return 0;
 }
-
-/*
-void	check_file1(t_data *data, t_var_us *var)
-{
-	if (check_file(data, var) == 1)
-	{
-		free_data(data);
-		free_envp(var->envp);
-		free_var(var);
-		rl_clear_history();
-		exit(1);
-	}
-}
-*/
-
-// for testing ambuigous redirect: i know 2 cases 
-// 1. ls >$not_in_env
-// 2. if i enter esspace when i am asked for heredoc like this:
-// $>cat << EOF

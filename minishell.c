@@ -4,6 +4,8 @@
 t_global	g_global = {NULL, 0, 0, 1};
 
 
+
+
 int	handle_data(t_shell *shell, t_data *data)
 {
 	if (ft_herdoc(data, shell->env))

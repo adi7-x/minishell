@@ -11,6 +11,8 @@ SRCS = check_file_11.c \
       lexer_analysis.c \
       minishell.c \
       syntax_error.c \
+      lexer_utils.c \
+      functions_utils.c \
       execution/ft_herdoc.c \
       execution/garbage_collector.c \
       execution/pipeline.c \
