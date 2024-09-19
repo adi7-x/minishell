@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:38:19 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 11:04:36 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:49:50 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ void	sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
+
 void	setup_signals(void)
 {
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
+
 void	handle_heredoc_signal(int sig)
 {
 	(void)sig;

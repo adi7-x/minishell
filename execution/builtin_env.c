@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:49:51 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 12:50:01 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:49:23 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	builtin_env(t_shell *shell)
 {
-	char **env;
+	char	**env;
 
 	env = shell->env;
 	while (*env)

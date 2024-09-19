@@ -1,51 +1,53 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_unset.c                                    :+:      :+:    :+:   */
+/*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/18 12:34:35 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 20:06:38 by elcid            ###   ########.fr       */
+/*   Created: 2024/09/18 22:37:45 by elcid             #+#    #+#             */
+/*   Updated: 2024/09/18 22:51:09 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_unsetenv(t_shell *shell, char *name)
+static int	check_n_flag(char *arg)
 {
 	int	i;
-	int	len;
 
-	i = 0;
-	len = strlen(name);
-	while (shell->env[i])
+	if (arg == NULL || arg[0] != '-' || arg[1] != 'n')
+		return (0);
+	i = 2;
+	while (arg[i] != '\0')
 	{
-		if (strncmp(shell->env[i], name, len) == 0 && (shell->env[i][len] == '='
-			|| shell->env[i][len] == '\0'))
-		{
-			gc_remove_ptr(shell->env[i]);
-			while (shell->env[i])
-			{
-				shell->env[i] = shell->env[i + 1];
-				i++;
-			}
+		if (arg[i] != 'n')
 			return (0);
-		}
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
-int	builtin_unset(t_shell *shell, t_data *data)
+int	builtin_echo(t_data *data)
 {
 	int	i;
+	int	n_flag;
 
 	i = 1;
-	while (data->cmd[i])
+	n_flag = 0;
+	while (data->cmd[i] && check_n_flag(data->cmd[i]))
 	{
-		ft_unsetenv(shell, data->cmd[i]);
+		n_flag = 1;
 		i++;
 	}
+	while (data->cmd[i])
+	{
+		write(1, data->cmd[i], strlen(data->cmd[i]));
+		if (data->cmd[i + 1])
+			write(1, " ", 1);
+		i++;
+	}
+	if (!n_flag)
+		write(1, "\n", 1);
 	return (0);
 }

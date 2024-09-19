@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:13 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/18 17:35:06 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/19 12:41:42 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -616,6 +616,7 @@ t_data	*ft_parsing(t_lexer *lexer, char **envp)
 	var.file = NULL;
 	while (lexer)
 	{
+		
 		if (lexer->type == TOKEN_WORD && lexer->prev == NULL)
 			var.cmd = ft_addstring(var.cmd, lexer, envp);
 		else if (lexer->type == TOKEN_WORD && lexer->prev->type != TOKEN_WORD

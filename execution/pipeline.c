@@ -6,42 +6,11 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:51:28 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 16:16:27 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 20:07:35 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	exit_with_error(char *error_msg)
-{
-	perror(error_msg);
-	gc_free_all();
-	exit(1);
-}
-
-int	count_commands_and_create_pipes(t_data *data, int ***pipes)
-{
-	int		count;
-	t_data	*current;
-	int		i;
-
-	count = 0;
-	current = data;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	*pipes = gc_malloc((count - 1) * sizeof(int *));
-	i = 0;
-	while (i < count - 1)
-	{
-		(*pipes)[i] = gc_malloc(2 * sizeof(int));
-		pipe((*pipes)[i]);
-		i++;
-	}
-	return (count);
-}
 
 void	execute_external_command(t_shell *shell, t_data *current)
 {
@@ -58,19 +27,6 @@ void	execute_external_command(t_shell *shell, t_data *current)
 	}
 	execve(cmd_path, current->cmd, shell->env);
 	ft_handle_execve_error(cmd_path);
-}
-
-void	close_pipes(int **pipes, int cmd_count)
-{
-	int	i;
-
-	i = 0;
-	while (i < cmd_count - 1)
-	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		i++;
-	}
 }
 
 void	setup_child_pipes(int **pipes, int i, int cmd_count)
@@ -129,11 +85,11 @@ int	wait_for_children(pid_t *pids, int cmd_count)
 
 int	execute_pipeline(t_shell *shell, t_data *data)
 {
-	int cmd_count;
-	int **pipes;
-	pid_t *pids;
-	t_data *current;
-	int i;
+	int		cmd_count;
+	int		**pipes;
+	pid_t	*pids;
+	t_data	*current;
+	int		i;
 
 	cmd_count = count_commands_and_create_pipes(data, &pipes);
 	pids = gc_malloc(cmd_count * sizeof(pid_t));

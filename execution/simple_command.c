@@ -6,37 +6,36 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:36:16 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 17:49:57 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 20:09:38 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void    ft_handle_execve_error(char *path)
+void	ft_handle_execve_error(char *path)
 {
-    if (access(path, F_OK) == 0)
-    {
-        if (access(path, X_OK) == 0)
-        {
-            write(2, path, ft_strlen(path));
-            write(2, ": is a directory\n", 18);
-				gc_free_all();
-            exit(126);
-        }
+	if (access(path, F_OK) == 0)
+	{
+		if (access(path, X_OK) == 0)
+		{
+			write(2, path, ft_strlen(path));
+			write(2, ": is a directory\n", 18);
+			gc_free_all();
+			exit(126);
+		}
 		else
 		{
 			write(2, path, ft_strlen(path));
 			write(2, ": Permission denied\n", 20);
 			exit(126);
 		}
-    }
-    perror(path);
+	}
+	perror(path);
 	gc_free_all();
-    exit(127);
+	exit(127);
 }
 
-
-static char	*search_in_path(char *cmd, char *path)
+char	*search_in_path(char *cmd, char *path)
 {
 	char	*dir;
 	char	*full_path;
@@ -115,8 +114,8 @@ void	handle_child_process(t_shell *shell, t_data *data)
 
 int	execute_command(t_shell *shell, t_data *data)
 {
-	pid_t pid;
-	int status;
+	pid_t	pid;
+	int		status;
 
 	signal(SIGINT, SIG_IGN);
 	pid = fork();

@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:22:58 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 11:07:47 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:48:46 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char	*create_env_entry(char *key, char *value)
 		return (strjoin(key, value, "="));
 	return (strjoin(key, "", ""));
 }
+
 int	handle_append_mode(t_shell *shell, char *key, char *value, int index)
 {
 	char	*old_value;
@@ -91,5 +92,4 @@ int	ft_setenv(t_shell *shell, char *key, char *value, int overwrite)
 	shell->env = new_env;
 	return (0);
 }
-
 // 001 https://claude.ai/chat/348a0c56-8ff6-4132-b0e9-8c8e2dfe565e

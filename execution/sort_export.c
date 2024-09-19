@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:18:57 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 11:08:03 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:57:19 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ char	**copy_and_sort_env(t_shell *shell, int *env_count)
 
 void	sort_export(t_shell *shell)
 {
-	int env_count;
-	char **env_copy;
+	int		env_count;
+	char	**env_copy;
 
 	env_copy = copy_and_sort_env(shell, &env_count);
 	if (!env_copy)

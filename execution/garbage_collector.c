@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:59 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/18 11:07:38 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:56:18 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,12 @@ char	*gc_strdup(const char *s)
 		memcpy(new_str, s, len);
 	return (new_str);
 }
+
 char	*gc_strndup(const char *s, size_t n)
 {
-	char *result = gc_malloc(n + 1);
+	char	*result;
+
+	result = gc_malloc(n + 1);
 	if (result)
 	{
 		strncpy(result, s, n);

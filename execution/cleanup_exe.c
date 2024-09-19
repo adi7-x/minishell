@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:13:22 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 11:26:15 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:50:27 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	free_files(t_file *file)
 
 void	free_data(t_data *data)
 {
-	t_data *next;
-	int i;
+	t_data	*next;
+	int		i;
 
 	while (data)
 	{

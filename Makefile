@@ -11,20 +11,28 @@ SRCS = check_file_11.c \
       lexer_analysis.c \
       minishell.c \
       syntax_error.c \
-      execution/export.c \
       execution/ft_herdoc.c \
       execution/garbage_collector.c \
       execution/pipeline.c \
+      execution/pipeline_utilis.c \
       execution/setenv.c \
       execution/signal_handlers.c \
       execution/simple_command.c \
+      execution/handle_command.c \
+      execution/initialize_shell.c \
       execution/sort_export.c \
       execution/strcmp.c \
+      execution/handle_redirections.c \
+      execution/helpers1.c \
 	execution/cleanup_exe.c \
+      execution/execute_builtin.c \
+      execution/builtin_export.c \
       execution/builtin_cd_pwd.c \
       execution/builtin_unset.c \
       execution/builtin_env.c \
-	
+      execution/builtin_exit.c \
+      execution/builtin_echo.c \
+
 
 OBJS = $(SRCS:.c=.o)
 

@@ -6,15 +6,15 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:30:45 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 11:08:08 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:55:04 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	get_comparison_length(const char *str, int *len)
+int	get_comparison_length(char *str, int *len)
 {
-	const char	*end;
+	char	*end;
 
 	end = strchr(str, '=');
 	if (end)
@@ -26,10 +26,10 @@ int	get_comparison_length(const char *str, int *len)
 
 int	custom_strcmp(char *a, char *b)
 {
-	int a_len;
-	int b_len;
-	int min_len;
-	int cmp;
+	int	a_len;
+	int	b_len;
+	int	min_len;
+	int	cmp;
 
 	get_comparison_length(a, &a_len);
 	get_comparison_length(b, &b_len);

@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:29:00 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 12:54:10 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:58:07 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	update_pwd_env(t_shell *shell, char *old_pwd)
 
 int	builtin_cd(t_shell *shell, t_data *data)
 {
-	char *path;
-	char old_pwd[MAX_PATH];
+	char	*path;
+	char	old_pwd[MAX_PATH];
 
 	if (data->cmd[1] == NULL)
 	{

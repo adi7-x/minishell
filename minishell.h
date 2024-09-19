@@ -32,6 +32,7 @@
 # define TOKEN_OUTREDIR 4
 # define TOKEN_HEREDOC 5
 # define TOKEN_REDIR_APPEND 6
+# define TOKEN_SEMICOLON 7
 
 typedef struct s_env
 {
@@ -254,13 +255,18 @@ void					handle_heredoc_signal(int sig);
 void					free_data(t_data *data);
 void					cleanup(void);
 
-int	builtin_cd(t_shell *shell, t_data *data);
-int	builtin_pwd(t_shell *shell);
-int	builtin_unset(t_shell *shell, t_data *data);
-int	builtin_env(t_shell *shell);
+int						builtin_cd(t_shell *shell, t_data *data);
+int						builtin_pwd(t_shell *shell);
+int						builtin_unset(t_shell *shell, t_data *data);
+int						builtin_env(t_shell *shell);
+int						builtin_exit(t_data *data);
+int						builtin_echo(t_data *data);
 
-int	ft_unsetenv(t_shell *shell, char *name);
+int						ft_unsetenv(t_shell *shell, char *name);
 int						execute_pipeline(t_shell *shell, t_data *data);
+int						count_commands_and_create_pipes(t_data *data,
+							int ***pipes);
+void					close_pipes(int **pipes, int cmd_count);
 char					*find_command(t_shell *shell, char *cmd);
 int						handle_redirections(t_file *file);
 int						is_builtin(char *cmd);
@@ -275,8 +281,15 @@ char					*strjoin(char *s1, char *s2, char *delimiter);
 int						execute_command(t_shell *shell, t_data *data);
 char					*find_command(t_shell *shell, char *cmd);
 char					*ft_strtok(char *str, char sepa);
+void					handle_command(t_shell *shell, t_data *data);
+void					initialize_shell(t_shell *shell, char **envp);
+int						execute_builtin(t_shell *shell, t_data *data);
+int						is_builtin(char *cmd);
+char					*ft_strtok(char *str, char sepa);
+char					*strjoin(char *s1, char *s2, char *delimiter);
+
 void					exit_with_error(char *error_msg);
 void					free_data(t_data *data);
 
-void    ft_handle_execve_error(char *path);
+void					ft_handle_execve_error(char *path);
 #endif

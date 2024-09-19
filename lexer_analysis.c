@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_analysis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:02:17 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/16 22:12:24 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:36:48 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,17 @@ int	handle_word(t_lexer **lexer, char *len)
 	append_token_to_lexer(lexer, str, TOKEN_WORD);
 	return (i);
 }
+int handle_semicolon(t_lexer **lexer, char *input)
+{
+	(void)input;
+    char *semicolon_str = gc_malloc(2);
+    if (semicolon_str == NULL)
+        return (0);
+    semicolon_str[0] = ';';
+    semicolon_str[1] = '\0';
+    append_token_to_lexer(lexer, semicolon_str, TOKEN_SEMICOLON);
+    return (1);
+}
 
 void lexer_analysis(char *input, t_lexer **lexer)
 {
@@ -192,6 +203,8 @@ void lexer_analysis(char *input, t_lexer **lexer)
             i += handle_input_redirection(lexer, &input[i]);
         else if (input[i] == '|')
             i += handle_pipe(lexer, &input[i]);
+		else if (input[i] == ';')
+            i += handle_semicolon(lexer, &input[i]);
         else if (is_whitespace_char(input[i]))
             i++;
         else
