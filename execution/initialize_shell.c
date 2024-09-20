@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:51:24 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/20 17:26:41 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/20 18:36:42 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,31 @@ char	**copy_env(char **envp, t_shell *shell)
 	return (new_env);
 }
 
+int	get_num_len(int nbr)
+{
+	int	len;
+
+	len = 1;
+	while (nbr != 0)
+	{
+		nbr /= 10;
+		len++;
+	}
+	return (len);
+}
+
 char	*int_to_str(int nbr)
 {
 	char	*str;
 	int		len;
-	int		n;
 
-	len = 1;
-	n = nbr;
-	while (n != 0)
+	if (nbr >= 1000)
 	{
-		n /= 10;
-		len++;
+		printf("bash: warning: shell level (%d) too high, resetting to 1\n",
+			nbr);
+		return (gc_strdup("1"));
 	}
+	len = get_num_len(nbr);
 	str = gc_malloc(len + 1);
 	if (!str)
 		return (NULL);
