@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:51:28 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 20:07:35 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/20 12:23:56 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,21 @@ int	wait_for_children(pid_t *pids, int cmd_count)
 		waitpid(pids[i], &status, 0);
 		if (i == cmd_count - 1)
 		{
-			if (WIFEXITED(status))
-				last_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				last_status = 128 + WTERMSIG(status);
+			if ((status & 127) == 0)
+				last_status = status >> 8;
+			else if ((status & 127) != 0)
+			{
+				if ((status & 127) == 2)
+				{
+					write(1, "\n", 1);
+					last_status = 130;
+				}
+				else if ((status & 127) == 3)
+				{
+					write(1, "Quit (core dumped)\n", 20);
+					last_status = 131;
+				}
+			}
 		}
 		i++;
 	}
@@ -90,16 +101,21 @@ int	execute_pipeline(t_shell *shell, t_data *data)
 	pid_t	*pids;
 	t_data	*current;
 	int		i;
+	int		last_status;
 
 	cmd_count = count_commands_and_create_pipes(data, &pipes);
 	pids = gc_malloc(cmd_count * sizeof(pid_t));
 	current = data;
 	i = 0;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	while (i < cmd_count)
 	{
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
 			setup_child_pipes(pipes, i, cmd_count);
 			execute_child_process(shell, current);
 		}
@@ -109,5 +125,6 @@ int	execute_pipeline(t_shell *shell, t_data *data)
 		i++;
 	}
 	close_pipes(pipes, cmd_count);
-	return (wait_for_children(pids, cmd_count));
+	last_status = wait_for_children(pids, cmd_count);
+	return (last_status);
 }

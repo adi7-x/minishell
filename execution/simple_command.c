@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:36:16 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 20:09:38 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/19 22:37:59 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ char	*find_command(t_shell *shell, char *cmd)
 	char	*full_path;
 	int		i;
 
+	if (!cmd || *cmd == '\0')
+		return (NULL);
 	if (strchr(cmd, '/'))
 		return (gc_strdup(cmd));
 	i = 0;
@@ -92,12 +94,13 @@ void	handle_child_process(t_shell *shell, t_data *data)
 	signal(SIGQUIT, SIG_DFL);
 	if (data->file && handle_redirections(data->file) == -1)
 	{
-		write(STDERR_FILENO, "bash: ", 6);
-		write(STDERR_FILENO, data->file->file_name,
-			strlen(data->file->file_name));
-		write(STDERR_FILENO, ": No such file or directory\n", 28);
-		gc_free_all();
+		print_error_not_such_file(data->file->file_name);
 		exit(1);
+	}
+	if (!data->cmd || !data->cmd[0])
+	{
+		gc_free_all();
+		exit(0);
 	}
 	cmd_path = find_command(shell, data->cmd[0]);
 	if (!cmd_path)

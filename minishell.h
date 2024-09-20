@@ -253,6 +253,7 @@ int						is_builtin(char *cmd);
 char					*ft_strtok(char *str, char sepa);
 char					*strjoin(char *s1, char *s2, char *delimiter);
 
+void	print_error_not_such_file(char *file_name);
 void					exit_with_error(char *error_msg);
 void					free_data(t_data *data);
 

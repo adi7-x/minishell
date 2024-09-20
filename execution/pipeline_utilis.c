@@ -6,18 +6,12 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 20:00:30 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/18 20:08:22 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/19 22:36:43 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exit_with_error(char *error_msg)
-{
-	perror(error_msg);
-	gc_free_all();
-	exit(1);
-}
 
 void	close_pipes(int **pipes, int cmd_count)
 {
