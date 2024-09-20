@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:40:49 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/19 17:41:13 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:41:01 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	*ft_calloc(size_t count, size_t size)
 
 	if (count != 0 && size > SIZE_MAX / count)
 		return (0);
-	p = malloc(count * size);
+	p = gc_malloc(count * size);
 	if (p == NULL)
 		return (NULL);
 	memset(p, 0, count * size);

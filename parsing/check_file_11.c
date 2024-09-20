@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:09:10 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:59:26 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:52:26 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	free_data111(t_data *data)
 	while (data)
 	{
 		tmp = data->next;
-		ft_free1(data->cmd);
 		free_file(data->file);
 		gc_remove_ptr(data);
 		data = tmp;

@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:39:58 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:50:55 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:52:19 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,6 @@ char	**ft_catstr(char **str, char **str1)
 	var.i = 1;
 	while (str1 && str1[var.i])
 		var.new_str[var.j++] = gc_strdup(str1[var.i++]);
-	ft_free1(str);
-	ft_free1(str1);
 	return (var.new_str);
 }
 
@@ -125,9 +123,6 @@ char	**ft_addstring(char **str, t_lexer *lexer, char **envp)
 	if (str)
 		var.i = ft_copy(var.cmd, str);
 	ft_copy(&var.cmd[var.i], var.new_str);
-	ft_free1(str);
-	if (str)
-		ft_free1(str);
 	return (var.cmd);
 }
 
