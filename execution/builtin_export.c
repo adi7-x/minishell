@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elcid <oessaadi@student.42.fr>                +#+  +:+
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+
 	+#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 11:25:00 by elcid             #+#    #+#             */

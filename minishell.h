@@ -1,3 +1,4 @@
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -182,7 +183,7 @@ char					*remove_qout(char *str);
 void					append_to_data(t_data **data, t_file **file,
 							char ***cmd);
 t_env					*convert_env_to_list(char **env);
-int check_file1(t_data *data);
+int						check_file1(t_data *data);
 int						ft_herdoc(t_data *data, char **env);
 
 int						handle_ambiguous_redirect(t_file *new);
@@ -221,9 +222,12 @@ int						builtin_echo(t_data *data);
 
 int						ft_unsetenv(t_shell *shell, char *name);
 int						execute_pipeline(t_shell *shell, t_data *data);
-int						count_commands_and_create_pipes(t_data *data,
-							int ***pipes);
+int						execute_pipeline(t_shell *shell, t_data *data);
+void					create_pipes(int ***pipes, int cmd_count);
+int						count_commands(t_data *data);
 void					close_pipes(int **pipes, int cmd_count);
+void					setup_child_pipes(int **pipes, int i, int cmd_count);
+
 char					*find_command(t_shell *shell, char *cmd);
 int						handle_redirections(t_file *file);
 int						is_builtin(char *cmd);
@@ -246,6 +250,7 @@ char					*ft_strtok(char *str, char sepa);
 char					*strjoin(char *s1, char *s2, char *delimiter);
 
 void					exit_with_error(char *error_msg);
+void					handle_execve_error(char *path);
 void					free_data(t_data *data);
 
 void					ft_handle_execve_error(char *path);
@@ -257,6 +262,6 @@ void					*ft_calloc(size_t count, size_t size);
 char					*ft_strncpy(char *dest, char *src, int size);
 char					**ft_split_it(char *str);
 void					ft_free1(char **str);
-void	print_error_not_such_file(char *file_name);
+void					print_error_not_such_file(char *file_name);
 
 #endif
