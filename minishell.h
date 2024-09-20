@@ -118,8 +118,6 @@ typedef struct s_global
 	int					is_main_shell;
 }						t_global;
 
-
-
 typedef struct s_shell
 {
 	char				**env;
@@ -153,7 +151,6 @@ char					*apend_char_str(char *str, char c);
 
 char					*ft_itoa(int nb);
 
-
 char					*ft_getenv(char **env, char *str);
 char					*apend_char_str(char *str, char c);
 void					add_to_str(char *str, t_var *var);
@@ -170,7 +167,6 @@ void					append_to_file(t_lexer *lexer, int type, t_file **file,
 t_data					*ft_parsing(t_lexer *lexer, char **envp);
 t_data					*process_input(char *input, t_shell *shell);
 int						count_str(char **str);
-void					ft_free1(char **str);
 void					ft_ambiguous(char **namfile, t_file **file,
 							t_file *newfile, char *s);
 
@@ -179,7 +175,6 @@ int						cont_w(const char *str, char c);
 char					**ft_split(char *s, char c);
 char					*ft_substr(char *s, int start, int len);
 void					check_word_expand(char *str, t_var *var);
-char					*ft_itoa(int nb);
 int						ft_exit_status(t_var *var);
 int						ft_len(long nb);
 char					*ft_strsrch(char *str, char c);
@@ -187,12 +182,10 @@ char					*remove_qout(char *str);
 void					append_to_data(t_data **data, t_file **file,
 							char ***cmd);
 t_env					*convert_env_to_list(char **env);
-void					free_env_list(t_env *env_list);
+int check_file1(t_data *data);
 int						ft_herdoc(t_data *data, char **env);
 
-int						check_file1(t_data *data);
 int						handle_ambiguous_redirect(t_file *new);
-int						check_file(t_data *data);
 
 void					free_file(t_file *file);
 void					free_data111(t_data *data);
@@ -200,7 +193,6 @@ void					free_envp(t_env *envp);
 
 int						is_token_character(char c, int *single_quote_state,
 							int *double_quote_state);
-
 
 void					ft_lstadd_back(t_lexer **lst, t_lexer *new);
 
@@ -253,16 +245,18 @@ int						is_builtin(char *cmd);
 char					*ft_strtok(char *str, char sepa);
 char					*strjoin(char *s1, char *s2, char *delimiter);
 
-void	print_error_not_such_file(char *file_name);
 void					exit_with_error(char *error_msg);
 void					free_data(t_data *data);
 
 void					ft_handle_execve_error(char *path);
-int	handle_semicolon(t_lexer **lexer, char *input);
-int	process_syntax_check(t_lexer **lexer);
-int ft_strlen( char *str);
+int						handle_semicolon(t_lexer **lexer, char *input);
+int						process_syntax_check(t_lexer **lexer);
+int						ft_strlen(char *str);
 int						is_whitespace_char(char c);
-void	*ft_calloc(size_t count, size_t size);
-char	*ft_strncpy(char *dest, char *src, int size);
+void					*ft_calloc(size_t count, size_t size);
+char					*ft_strncpy(char *dest, char *src, int size);
+char					**ft_split_it(char *str);
+void					ft_free1(char **str);
+void	print_error_not_such_file(char *file_name);
 
 #endif

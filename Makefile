@@ -3,15 +3,21 @@ CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 
 NAME = minishell
 
-SRCS = check_file_11.c \
-      check_quotes.c \
+      
+SRCS = minishell.c \
+      parsing/ft_utls_v2.c \
+      parsing/ft_string_utils_v1.c \
+      parsing/ft_expand_v1.c \
+      parsing/ft_parser_v1.c  \
+      parsing/ft_utils_v1.c \
+      parsing/ft_file_utils_v1.c  \
+      parsing/check_file_11.c \
+      parsing/check_quotes.c \
       clean_up.c \
-      ft_expande_her.c \
-      ft_parsing_end_expand.c \
-      lexer_analysis.c \
-      minishell.c \
-      syntax_error.c \
-      lexer_utils.c \
+      parsing/ft_expande_her.c \
+      parsing/lexer_analysis.c \
+      parsing/syntax_error.c \
+      parsing/lexer_utils.c \
       functions_utils.c \
       execution/ft_herdoc.c \
       execution/garbage_collector.c \

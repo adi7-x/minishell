@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   check_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:41:18 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/13 15:41:47 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/20 09:09:15 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	check_quotes(char *str)
 {
