@@ -1,5 +1,0 @@
-cd ""
-
-command not found exit 127 not 0
-
-change the PATH to the seesion one

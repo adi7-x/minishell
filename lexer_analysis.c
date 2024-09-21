@@ -18,7 +18,7 @@ int	is_token_character(char c, int *single_quote_state, int *double_quote_state)
 		*single_quote_state *= -1;
 	if (c == '\"' && *single_quote_state != -1)
 		*double_quote_state *= -1;
-	if (ft_strsrch("()<>|\t\v\n ", c) && (*single_quote_state != -1
+	if (ft_strsrch("<>|\t\v\n ", c) && (*single_quote_state != -1
 			&& *double_quote_state != -1))
 		return (0);
 	else

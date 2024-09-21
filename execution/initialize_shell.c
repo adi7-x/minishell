@@ -22,8 +22,11 @@ char	**create_default_env(char *cwd)
 	new_env[0] = strjoin("PWD=", cwd, "");
 	new_env[1] = gc_strdup("SHLVL=1");
 	new_env[2] = gc_strdup("_=/usr/bin/env");
-	new_env[3] = gc_strdup("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:"
-			"/usr/bin:/sbin:/bin");
+	new_env[3] = gc_strdup(
+			"PATH=/nfs/homes/oessaadi/.console-ninja/.bin:"
+			"/nfs/homes/oessaadi/bin:"
+			"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+			"/usr/games:/usr/local/games:/snap/bin");
 	new_env[4] = NULL;
 	return (new_env);
 }
