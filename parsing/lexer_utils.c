@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:16:10 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:49:44 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:46:59 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,4 @@ int	handle_pipe(t_lexer **lexer, char *len)
 	ft_strncpy(str, len, i);
 	append_token_to_lexer(lexer, str, TOKEN_PIPE);
 	return (i);
-}
-
-int	handle_semicolon(t_lexer **lexer, char *input)
-{
-	char	*semicolon_str;
-
-	(void)input;
-	semicolon_str = gc_malloc(2);
-	if (semicolon_str == NULL)
-		return (0);
-	semicolon_str[0] = ';';
-	semicolon_str[1] = '\0';
-	append_token_to_lexer(lexer, semicolon_str, TOKEN_SEMICOLON);
-	return (1);
 }

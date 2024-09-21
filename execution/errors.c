@@ -6,11 +6,24 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:25:07 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/20 17:26:41 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/21 18:53:41 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	handle_ambiguous_redirect(t_file *new)
+{
+	if (new->ambiguous == 1)
+	{
+		write(2, "bash:", 6);
+		write(2, new->file_name, ft_strlen(new->file_name));
+		write(2, ": ambiguous redirect\n", 21);
+		gc_free_all();
+		exit(1);
+	}
+	return (0);
+}
 
 void	handle_execve_error(char *path)
 {

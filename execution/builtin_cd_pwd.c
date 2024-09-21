@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:29:00 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/20 17:26:41 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/21 12:48:18 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ int	builtin_cd(t_shell *shell, t_data *data)
 	char	*path;
 	char	old_pwd[MAX_PATH];
 
-	if (data->cmd[1] == NULL || data->cmd[1][0] == '\0')
+	if (data->cmd[1] && data->cmd[1][0] == '\0')
+		return (0);
+	if (data->cmd[1] == NULL)
 	{
 		path = getenv("HOME");
 		if (!path)
@@ -63,10 +65,7 @@ int	builtin_cd(t_shell *shell, t_data *data)
 		}
 	}
 	else if (data->cmd[2] != NULL)
-	{
-		write(2, "cd: too many arguments\n", 24);
-		return (1);
-	}
+		return (write(2, "cd: too many arguments\n", 24) && 1);
 	else
 		path = data->cmd[1];
 	if (chdir(path) != 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_analysis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:02:17 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/19 19:30:01 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:46:19 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	is_token_character(char c, int *single_quote_state, int *double_quote_state)
 		*single_quote_state *= -1;
 	if (c == '\"' && *single_quote_state != -1)
 		*double_quote_state *= -1;
-	if (ft_strsrch("()&;<>|\t\v\n ", c) && (*single_quote_state != -1
+	if (ft_strsrch("()<>|\t\v\n ", c) && (*single_quote_state != -1
 			&& *double_quote_state != -1))
 		return (0);
 	else

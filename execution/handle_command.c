@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:04:55 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/20 17:26:41 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/21 18:53:02 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,12 @@ int	execute_single_command(t_shell *shell, t_data *data)
 {
 	int	status;
 
+	signal(SIGINT, SIG_IGN);
 	if (data->cmd && data->cmd[0] && is_builtin(data->cmd[0]))
 		status = handle_builtin(shell, data);
 	else
 		status = execute_command(shell, data);
+	signal(SIGINT, sigint_handler);
 	return (status);
 }
 

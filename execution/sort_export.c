@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:18:57 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/20 17:26:41 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/21 18:54:23 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	print_env_entry(char *entry, t_shell *shell)
 	if (!key)
 		return ;
 	val = strchr(key, '=');
-	if (shell->ignore_path && strncmp(key, "PATH=", 5) == 0)
+	if ((shell->ignore_path && strncmp(key, "PATH=", 5) == 0) || strncmp(key,
+			"_=", 2) == 0)
 	{
 		gc_remove_ptr(key);
 		return ;

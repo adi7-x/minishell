@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_analysis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:02:17 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:12:34 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:46:42 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ void	lexer_analysis(char *input, t_lexer **lexer)
 			i += handle_input_redirection(lexer, &input[i]);
 		else if (input[i] == '|')
 			i += handle_pipe(lexer, &input[i]);
-		else if (input[i] == ';')
-			i += handle_semicolon(lexer, &input[i]);
 		else if (is_whitespace_char(input[i]))
 			i++;
 		else

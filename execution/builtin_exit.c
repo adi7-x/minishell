@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 19:23:25 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/21 16:31:06 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:51:32 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ int	builtin_exit(t_data *data)
 	{
 		printf("exit\n");
 		cleanup_shell();
-		exit((int)(exit_code & 255));
+		exit(exit_code);
 	}
 	else
-		return ((int)(exit_code & 255));
+		return (exit_code);
 }

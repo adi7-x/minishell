@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:51:28 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/20 17:26:41 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/21 20:23:12 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,23 +31,26 @@ void	exec_external_cmd(t_shell *shell, t_data *current)
 
 void	exec_child_process(t_shell *shell, t_data *current)
 {
+	int	exit_code;
+
 	g_global.is_main_shell = 0;
+	exit_code = 0;
 	if (current->file && handle_redirections(current->file) == -1)
 	{
-		write(STDERR_FILENO, "bash: ", 6);
-		write(STDERR_FILENO, current->file->file_name,
-			ft_strlen(current->file->file_name));
-		write(STDERR_FILENO, ": No such file or directory\n", 28);
-		gc_free_all();
+		print_error_not_such_file(current->file->file_name);
 		exit(1);
 	}
-	if (!current->cmd)
+	if (!current->cmd || current->cmd[0] == NULL)
 	{
 		gc_free_all();
 		exit(0);
 	}
 	if (is_builtin(current->cmd[0]))
-		exit(execute_builtin(shell, current));
+	{
+		exit_code = execute_builtin(shell, current);
+		gc_free_all();
+		exit(exit_code);
+	}
 	else
 		exec_external_cmd(shell, current);
 }
@@ -117,5 +120,6 @@ int	execute_pipeline(t_shell *shell, t_data *data)
 	fork_and_execute(shell, data, pipes, pids);
 	close_pipes(pipes, cmd_count);
 	last_status = wait_for_children(pids, cmd_count);
+	signal(SIGINT, sigint_handler);
 	return (last_status);
 }

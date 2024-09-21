@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 22:41:21 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 19:36:14 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 21:26:24 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ char					*remove_qout(char *str);
 void					add_parsed_data(t_data **data, t_file **file,
 							char ***cmd);
 int						ft_herdoc(t_data *data, char **env);
-
+void					free_herdoc_and_exit(int exit_s, char *str);
 int						handle_ambiguous_redirect(t_file *new);
 
 int						is_token_character(char c, int *single_quote_state,
@@ -201,7 +201,6 @@ int						handle_pipe(t_lexer **lexer, char *len);
 int						handle_word(t_lexer **lexer, char *len);
 void					lexer_analysis(char *input, t_lexer **lexer);
 
-// execute functions
 void					sigint_handler(int sig);
 void					setup_signals(void);
 void					handle_heredoc_signal(int sig);

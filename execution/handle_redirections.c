@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:18:56 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/21 16:26:52 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:53:32 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,12 @@ int	handle_redirections(t_file *file)
 			result = handle_outfile(current);
 		else if (current->append)
 			result = handle_append(current);
+		else if (current->ambiguous)
+			result = handle_ambiguous_redirect(current);
 		else
 			result = 0;
-		if (result == -1)
-			return (-1);
+		if (result == -1 || result == -2)
+			return (result);
 		current = current->next;
 	}
 	return (0);

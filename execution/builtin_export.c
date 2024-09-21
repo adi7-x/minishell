@@ -64,37 +64,26 @@ void	handle_valid_identifier(t_shell *shell, char *name, char *value)
 {
 	if (value && value[0] != '\0')
 	{
-		// printf("DEBUG: Value is present and non-empty\n");
 		if (name[strlen(name) - 1] == '+')
 		{
-			// printf("DEBUG: Append mode detected (2)\n");
 			name[strlen(name) - 1] = '\0';
 			ft_setenv(shell, name, value, 2);
 		}
 		else
 		{
-			// printf("DEBUG: Normal assignment mode (1)\n");
 			ft_setenv(shell, name, value, 1);
 		}
 	}
 	else if (is_inenv(shell->env, name) < 0)
 	{
-		// printf("DEBUG: Variable not in environment (0)\n");
-		// printf("name=%s, value=%s\n", name, value);
 		if (name[strlen(name) - 1] == '+')
 			name[strlen(name) - 1] = '\0';
 		ft_setenv(shell, name, value, 0);
 	}
 	else if (is_inenv(shell->env, name) >= 0 && value && value[0] == '\0')
-	{
-		// printf("DEBUG: Variable in environment, empty value (3)\n");
 		ft_setenv(shell, name, value, 3);
-	}
 	else
-	{
-		// printf("DEBUG: Variable in environment, no value specified (2)\n");
 		ft_setenv(shell, name, value, 2);
-	}
 }
 
 int	process_export_arg(t_shell *shell, char *arg)
@@ -140,7 +129,6 @@ int	builtin_export(t_shell *shell, t_data *data)
 	i = 1;
 	while (data->cmd[i])
 	{
-		// printf("DEBUG: Processing argument %d: %s\n", i, data->cmd[i]);
 		status = process_export_arg(shell, data->cmd[i]);
 		i++;
 	}

@@ -98,7 +98,6 @@ int	execute_command(t_shell *shell, t_data *data)
 	pid_t	pid;
 	int		status;
 
-	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 1);
@@ -115,7 +114,6 @@ int	execute_command(t_shell *shell, t_data *data)
 				return (write(1, "Quit (core dumped)\n", 20), 131);
 		}
 		status = WEXITSTATUS(status);
-		signal(SIGINT, sigint_handler);
 	}
 	return (status);
 }
