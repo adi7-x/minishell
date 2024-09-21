@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/20 22:41:21 by adbourji          #+#    #+#             */
+/*   Updated: 2024/09/21 18:56:33 by adbourji         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -19,13 +30,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # define MAX_PATH 1024
-
-// typedef struct s_shell
-// {
-// 	char				**env;
-// 	int					ignore_path;
-// 	char				cwd[MAX_PATH];
-// }						t_shell;
 
 # define TOKEN_WORD 1
 # define TOKEN_PIPE 2
@@ -140,57 +144,49 @@ void					free_files(t_file *file);
 void					free_parsed_data(t_data *data);
 void					free_lexer(t_lexer *lexer);
 
-int						get_quoted_word(t_lexer **lexer, char *input);
 int						handle_pipe(t_lexer **lexer, char *input);
 void					ft_lstadd_back(t_lexer **lst, t_lexer *new);
 void					lexer_analysis(char *input, t_lexer **lexer);
 void					free_lexer(t_lexer *lexer);
 void					free_parsed_data(t_data *data);
-int						check_quotes(char *str);
-
-char					*apend_char_str(char *str, char c);
+int						validate_quotes(char *str);
 
 char					*ft_itoa(int nb);
 
-char					*ft_getenv(char **env, char *str);
-char					*apend_char_str(char *str, char c);
-void					add_to_str(char *str, t_var *var);
-char					*ft_strjoinn(char *s1, char *ss2);
+char					*get_environment_variable(char **env, char *str);
+char					*append_char_to_string(char *str, char c);
+void					append_char_to_new_string(char *str, t_var *var);
+char					*join_strings(char *s1, char *ss2);
 
-char					**ft_catstr(char **str, char **str1);
-void					expand_var(t_var *var, char **envp, int flag);
-void					other_condition(t_var *var, char *str, char **envp,
+char					**concatenate_strings(char **str, char **str1);
+void					expand_environment_variable(t_var *var, char **envp,
+							int flag);
+void					handle_expansion_condition(t_var *var, char *str,
+							char **envp, int flg);
+char					**expand_word_with_variables(char *str, char **envp,
 							int flg);
-char					**ft_expending_word(char *str, char **envp, int flg);
-char					**ft_addstring(char **str, t_lexer *lexer, char **envp);
-void					append_to_file(t_lexer *lexer, int type, t_file **file,
+char					**add_command_string(char **str, t_lexer *lexer,
 							char **envp);
-t_data					*ft_parsing(t_lexer *lexer, char **envp);
-t_data					*process_input(char *input, t_shell *shell);
-int						count_str(char **str);
-void					ft_ambiguous(char **namfile, t_file **file,
-							t_file *newfile, char *s);
+void					handle_file_redirection(t_lexer *lexer, int type,
+							t_file **file, char **envp);
+t_data					*parse_lexer_to_data(t_lexer *lexer, char **envp);
+t_data					*convert_input_to_data(char *input, t_shell *shell);
+int						count_string_array(char **str);
+void					handle_ambiguous_redirection(char **namfile,
+							t_file **file, t_file *newfile, char *s);
 
-int						ft_copy(char **cmd, char **str);
-int						cont_w(const char *str, char c);
-char					**ft_split(char *s, char c);
+int						copy_string_array(char **cmd, char **str);
 char					*ft_substr(char *s, int start, int len);
-void					check_word_expand(char *str, t_var *var);
-int						ft_exit_status(t_var *var);
-int						ft_len(long nb);
+void					check_for_variable_expansion(char *str, t_var *var);
+int						handle_exit_status(t_var *var);
+int						calculate_length(long nb);
 char					*ft_strsrch(char *str, char c);
 char					*remove_qout(char *str);
-void					append_to_data(t_data **data, t_file **file,
+void					add_parsed_data(t_data **data, t_file **file,
 							char ***cmd);
-t_env					*convert_env_to_list(char **env);
-int						check_file1(t_data *data);
 int						ft_herdoc(t_data *data, char **env);
 
 int						handle_ambiguous_redirect(t_file *new);
-
-void					free_file(t_file *file);
-void					free_data111(t_data *data);
-void					free_envp(t_env *envp);
 
 int						is_token_character(char c, int *single_quote_state,
 							int *double_quote_state);
@@ -211,7 +207,7 @@ void					setup_signals(void);
 void					handle_heredoc_signal(int sig);
 
 void					free_data(t_data *data);
-void					cleanup(void);
+void					cleanup_shell(void);
 
 int						builtin_cd(t_shell *shell, t_data *data);
 int						builtin_pwd(t_shell *shell);
@@ -253,15 +249,18 @@ void					exit_with_error(char *error_msg);
 void					handle_execve_error(char *path);
 void					free_data(t_data *data);
 
-void					ft_handle_execve_error(char *path);
 int						handle_semicolon(t_lexer **lexer, char *input);
 int						process_syntax_check(t_lexer **lexer);
 int						ft_strlen(char *str);
 int						is_whitespace_char(char c);
 void					*ft_calloc(size_t count, size_t size);
 char					*ft_strncpy(char *dest, char *src, int size);
-char					**ft_split_it(char *str);
-void					ft_free1(char **str);
+char					**ft_split(char *str);
+void					free_string_array(char **str);
 void					print_error_not_such_file(char *file_name);
+void					init_var(t_var *var);
+void					handle_quotes(char c, t_var *var);
+void					handle_dollar_sign(t_var *var, char *str, char **envp,
+							int flg);
 
 #endif

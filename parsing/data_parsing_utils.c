@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_parser_v1.c                                     :+:      :+:    :+:   */
+/*   data_parsing_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/20 09:21:05 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:54:42 by adbourji         ###   ########.fr       */
+/*   Created: 2024/09/21 18:27:15 by adbourji          #+#    #+#             */
+/*   Updated: 2024/09/21 18:27:21 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	append_to_data(t_data **data, t_file **file, char ***cmd)
+void	add_parsed_data(t_data **data, t_file **file, char ***cmd)
 {
 	t_data	*newdata;
 	t_data	*tmp;
@@ -35,7 +35,7 @@ void	append_to_data(t_data **data, t_file **file, char ***cmd)
 	*cmd = NULL;
 }
 
-t_data	*ft_parsing(t_lexer *lexer, char **envp)
+t_data	*parse_lexer_to_data(t_lexer *lexer, char **envp)
 {
 	t_data	*data;
 	t_var	var;
@@ -49,22 +49,22 @@ t_data	*ft_parsing(t_lexer *lexer, char **envp)
 	while (lexer)
 	{
 		if (lexer->type == TOKEN_WORD && lexer->prev == NULL)
-			var.cmd = ft_addstring(var.cmd, lexer, envp);
+			var.cmd = add_command_string(var.cmd, lexer, envp);
 		else if (lexer->type == TOKEN_WORD && lexer->prev->type != TOKEN_WORD
 			&& lexer->prev->type != TOKEN_PIPE)
-			append_to_file(lexer, lexer->prev->type, &var.file, envp);
+			handle_file_redirection(lexer, lexer->prev->type, &var.file, envp);
 		else if (lexer->type == TOKEN_PIPE)
-			append_to_data(&data, &var.file, &var.cmd);
+			add_parsed_data(&data, &var.file, &var.cmd);
 		else if (lexer->type == TOKEN_WORD)
-			var.cmd = ft_addstring(var.cmd, lexer, envp);
+			var.cmd = add_command_string(var.cmd, lexer, envp);
 		lexer = lexer->next;
 	}
-	append_to_data(&data, &var.file, &var.cmd);
+	add_parsed_data(&data, &var.file, &var.cmd);
 	free_lexer(var.lexer);
 	return (data);
 }
 
-t_data	*process_input(char *input, t_shell *shell)
+t_data	*convert_input_to_data(char *input, t_shell *shell)
 {
 	t_lexer	*lexer_output;
 	t_data	*data;
@@ -74,7 +74,7 @@ t_data	*process_input(char *input, t_shell *shell)
 	lexer_analysis(input, &lexer_output);
 	if (!lexer_output)
 		return (NULL);
-	data = ft_parsing(lexer_output, shell->env);
+	data = parse_lexer_to_data(lexer_output, shell->env);
 	if (!data)
 	{
 		free_lexer(lexer_output);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_shell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:51:24 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/20 18:36:42 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/21 18:20:37 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	initialize_shell(t_shell *shell, char **envp)
 		perror("getcwd");
 		exit(1);
 	}
-	shlvl = ft_getenv(shell->env, "SHLVL");
+	shlvl = get_environment_variable(shell->env, "SHLVL");
 	if (shlvl)
 	{
 		level = atoi(shlvl) + 1;

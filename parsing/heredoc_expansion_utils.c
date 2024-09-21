@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_expande_her.c                                   :+:      :+:    :+:   */
+/*   heredoc_expansion_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:09:20 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:55:18 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:20:41 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_exit_statu(t_var *var)
+int	handle_exit_status_in_heredoc(t_var *var)
 {
 	char	*str;
 	char	*s;
 
 	s = ft_itoa(g_global.exit_number);
-	str = ft_strjoinn(var->str, s);
+	str = join_strings(var->str, s);
 	if (var->str)
 		gc_remove_ptr(var->str);
 	gc_remove_ptr(s);
@@ -26,7 +26,7 @@ int	ft_exit_statu(t_var *var)
 	return (2);
 }
 
-void	other_conditio(t_var *var, char *str, char **envp)
+void	handle_variable_expansion_in_heredoc(t_var *var, char *str, char **envp)
 {
 	char	*path;
 	char	*s;
@@ -35,20 +35,20 @@ void	other_conditio(t_var *var, char *str, char **envp)
 	if (str[var->i] == '$' && isalpha(str[var->i + 1]))
 	{
 		while (str[++var->i] && isalnum(str[var->i]))
-			var->var = apend_char_str(var->var, str[var->i]);
+			var->var = append_char_to_string(var->var, str[var->i]);
 	}
 	else if (str[var->i] == '$' && isdigit(str[var->i + 1]))
 		var->i += 2;
 	else if (str[var->i] != '\0')
 	{
-		var->str = apend_char_str(var->str, str[var->i]);
+		var->str = append_char_to_string(var->str, str[var->i]);
 		var->i += 1;
 	}
 	if (var->var != NULL)
 	{
-		path = ft_getenv(envp, var->var);
+		path = get_environment_variable(envp, var->var);
 		gc_remove_ptr(var->var);
-		s = ft_strjoinn(var->str, path);
+		s = join_strings(var->str, path);
 		if (var->str)
 			gc_remove_ptr(var->str);
 		var->str = s;
@@ -65,12 +65,12 @@ char	*expending_herd(char *str, char **env)
 	{
 		var.var = NULL;
 		if (str[var.i] == '$' && str[var.i + 1] == '\0')
-			var.str = apend_char_str(var.str, str[var.i++]);
+			var.str = append_char_to_string(var.str, str[var.i++]);
 		if (str[var.i] == '$' && str[var.i + 1] == '?')
-			var.i += ft_exit_statu(&var);
+			var.i += handle_exit_status_in_heredoc(&var);
 		if (str[var.i] == '\0')
 			break ;
-		other_conditio(&var, str, env);
+		handle_variable_expansion_in_heredoc(&var, str, env);
 	}
 	gc_remove_ptr(str);
 	return (var.str);

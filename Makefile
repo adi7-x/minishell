@@ -5,19 +5,20 @@ NAME = minishell
 
       
 SRCS = minishell.c \
-      parsing/ft_utls_v2.c \
-      parsing/ft_string_utils_v1.c \
-      parsing/ft_expand_v1.c \
-      parsing/ft_parser_v1.c  \
-      parsing/ft_utils_v1.c \
-      parsing/ft_file_utils_v1.c  \
-      parsing/check_file_11.c \
-      parsing/check_quotes.c \
-      clean_up.c \
-      parsing/ft_expande_her.c \
+      parsing/string_utils_2.c \
+      parsing/string_utils.c \
+      parsing/variable_expansion_utils.c \
+      parsing/data_parsing_utils.c  \
+      parsing/env_and_array_utils.c \
+      parsing/redirection_handling_utils.c  \
+      parsing/validate_quotes.c \
+      parsing/heredoc_expansion_utils.c \
       parsing/lexer_analysis.c \
       parsing/syntax_error.c \
       parsing/lexer_utils.c \
+      parsing/variable_expansion.c \
+      parsing/variable_expansion_utils2.c \
+      clean_up.c \
       functions_utils.c \
       execution/ft_herdoc.c \
       execution/garbage_collector.c \

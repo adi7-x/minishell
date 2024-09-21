@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_utils_v1.c                                      :+:      :+:    :+:   */
+/*   env_and_array_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:21:41 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:52:21 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:23:49 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_getenv(char **env, char *str)
+char	*get_environment_variable(char **env, char *str)
 {
 	int	i;
 	int	j;
@@ -31,7 +31,7 @@ char	*ft_getenv(char **env, char *str)
 	return (NULL);
 }
 
-int	count_str(char **str)
+int	count_string_array(char **str)
 {
 	int	i;
 
@@ -45,7 +45,7 @@ int	count_str(char **str)
 	return (i);
 }
 
-void	ft_free1(char **str)
+void	free_string_array(char **str)
 {
 	int	i;
 
@@ -60,14 +60,7 @@ void	ft_free1(char **str)
 	gc_remove_ptr(str);
 }
 
-// int is_whitespace_char(char c)
-// {
-//     if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f')
-//         return (1);
-//     return (0);
-// }
-
-int	ft_len(long nb)
+int	calculate_length(long nb)
 {
 	int	i;
 

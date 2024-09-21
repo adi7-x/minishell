@@ -1,35 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_quotes.c                                     :+:      :+:    :+:   */
+/*   validate_quotes.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 15:41:18 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:09:15 by adbourji         ###   ########.fr       */
+/*   Created: 2024/09/21 18:26:35 by adbourji          #+#    #+#             */
+/*   Updated: 2024/09/21 18:26:58 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_quotes(char *str)
+int	validate_quotes(char *input)
 {
 	int	i;
-	int	sinqot;
-	int	dbqot;
+	int	single_quote_state;
+	int	double_quote_state;
 
 	i = 0;
-	sinqot = 1;
-	dbqot = 1;
-	while (str[i] != '\0')
+	single_quote_state = 1;
+	double_quote_state = 1;
+	while (input[i] != '\0')
 	{
-		if (str[i] == '\"' && sinqot == 1)
-			dbqot *= (-1);
-		if (str[i] == '\'' && dbqot == 1)
-			sinqot *= (-1);
+		if (input[i] == '\"' && single_quote_state == 1)
+			double_quote_state *= (-1);
+		if (input[i] == '\'' && double_quote_state == 1)
+			single_quote_state *= (-1);
 		i++;
 	}
-	if (dbqot == -1 || sinqot == -1)
+	if (double_quote_state == -1 || single_quote_state == -1)
 		return (0);
 	return (1);
 }

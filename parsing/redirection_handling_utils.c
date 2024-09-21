@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_file_utils_v1.c                                 :+:      :+:    :+:   */
+/*   redirection_handling_utils.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:22:15 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 16:47:56 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 18:25:19 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_lstadd_back1(t_file **file, t_file *new)
+void	add_file_to_list(t_file **file, t_file *new)
 {
 	t_file	*tmp;
 
@@ -29,15 +29,16 @@ void	ft_lstadd_back1(t_file **file, t_file *new)
 		*file = new;
 }
 
-void	ft_ambiguous(char **namfile, t_file **file, t_file *newfile, char *s)
+void	handle_ambiguous_redirection(char **namfile, t_file **file,
+		t_file *newfile, char *s)
 {
-	ft_free1(namfile);
+	free_string_array(namfile);
 	newfile->file_name = s;
 	newfile->ambiguous = 1;
-	ft_lstadd_back1(file, newfile);
+	add_file_to_list(file, newfile);
 }
 
-void	type_file(int type, t_file *newfile)
+void	set_file_type(int type, t_file *newfile)
 {
 	if (type == TOKEN_INREDIR)
 		newfile->infile = 1;
@@ -49,7 +50,8 @@ void	type_file(int type, t_file *newfile)
 		newfile->append = 1;
 }
 
-void	append_to_file(t_lexer *lexer, int type, t_file **file, char **envp)
+void	handle_file_redirection(t_lexer *lexer, int type, t_file **file,
+		char **envp)
 {
 	t_file	*newfile;
 	char	**namefile;
@@ -60,19 +62,20 @@ void	append_to_file(t_lexer *lexer, int type, t_file **file, char **envp)
 	if (ft_strsrch(lexer->data, '\'') || ft_strsrch(lexer->data, '\"'))
 		newfile->expand = 1;
 	if (type != TOKEN_HEREDOC)
-		namefile = ft_expending_word(lexer->data, envp, 1);
+		namefile = expand_word_with_variables(lexer->data, envp, 1);
 	else
 	{
 		namefile = ft_calloc(sizeof(char *), 2);
 		namefile[0] = remove_qout(lexer->data);
 	}
-	if (!namefile[0] || count_str(namefile) > 1)
+	if (!namefile[0] || count_string_array(namefile) > 1)
 	{
-		ft_ambiguous(namefile, file, newfile, gc_strdup(lexer->data));
+		handle_ambiguous_redirection(namefile, file, newfile,
+			gc_strdup(lexer->data));
 		return ;
 	}
-	type_file(type, newfile);
+	set_file_type(type, newfile);
 	newfile->file_name = namefile[0];
 	gc_remove_ptr(namefile);
-	ft_lstadd_back1(file, newfile);
+	add_file_to_list(file, newfile);
 }

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_string_utils_v1.c                               :+:      :+:    :+:   */
+/*   string_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:22:45 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:52:45 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 17:53:39 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*apend_char_str(char *str, char c)
+char	*append_char_to_string(char *str, char c)
 {
 	int		i;
 	char	*new;
@@ -34,7 +34,7 @@ char	*apend_char_str(char *str, char c)
 	return (new);
 }
 
-char	*ft_strjoinn(char *s1, char *ss2)
+char	*join_strings(char *s1, char *ss2)
 {
 	int		i;
 	int		j;
@@ -121,10 +121,10 @@ char	*remove_qout(char *str)
 		else if (str[var.i] == '\"' && var.single_quote == 1)
 			;
 		else
-			newstr = apend_char_str(newstr, str[var.i]);
+			newstr = append_char_to_string(newstr, str[var.i]);
 		var.i++;
 	}
 	if (newstr == NULL)
-		newstr = apend_char_str(newstr, '\0');
+		newstr = append_char_to_string(newstr, '\0');
 	return (newstr);
 }

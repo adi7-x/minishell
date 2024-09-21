@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_utls_v2.c                                       :+:      :+:    :+:   */
+/*   string_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:39:58 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 16:52:19 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:01:38 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	cont_w1(const char *str)
+static int	count_non__words(const char *str)
 {
 	int	i;
 	int	count;
@@ -29,23 +29,23 @@ static int	cont_w1(const char *str)
 			while (str[i] != '\0' && !is_whitespace_char(str[i]))
 				i++;
 		}
-		else if (is_whitespace_char(str[i]))
+		else
 			i++;
 	}
 	return (count);
 }
 
-char	**ft_split_it(char *str)
+char	**ft_split(char *str)
 {
-	char	**p;
+	char	**words;
 	int		i;
 	int		j;
-	int		n;
+	int		num_words;
 
-	n = 0;
+	num_words = 0;
 	i = 0;
-	p = (char **)gc_malloc((cont_w1(str) + 1) * sizeof(char *));
-	if (!p)
+	words = (char **)gc_malloc((count_non__words(str) + 1) * sizeof(char *));
+	if (!words)
 		return (NULL);
 	while (str != NULL && str[i] != '\0')
 	{
@@ -56,19 +56,19 @@ char	**ft_split_it(char *str)
 		j = 0;
 		while (!is_whitespace_char(str[i]) && str[i] != '\0' && j++ >= 0)
 			i++;
-		p[n++] = ft_substr(str, i - j, j);
+		words[num_words++] = ft_substr(str, i - j, j);
 	}
-	p[n] = NULL;
-	return (p);
+	words[num_words] = NULL;
+	return (words);
 }
 
-char	**ft_catstr(char **str, char **str1)
+char	**concatenate_strings(char **str, char **str1)
 {
 	t_var	var;
 
 	var.i = 0;
 	var.j = -1;
-	var.count = count_str(str) + count_str(str1);
+	var.count = count_string_array(str) + count_string_array(str1);
 	var.new_str = ft_calloc(sizeof(char *), var.count + 1);
 	if (!var.new_str)
 		return (NULL);
@@ -76,7 +76,7 @@ char	**ft_catstr(char **str, char **str1)
 		var.new_str[++var.j] = gc_strdup(str[var.i++]);
 	if (var.j == -1)
 		var.j = 0;
-	var.var = ft_strjoinn(var.new_str[var.j], str1[0]);
+	var.var = join_strings(var.new_str[var.j], str1[0]);
 	if (var.new_str[var.j])
 		gc_remove_ptr(var.new_str[var.j]);
 	var.new_str[var.j] = var.var;
@@ -87,7 +87,7 @@ char	**ft_catstr(char **str, char **str1)
 	return (var.new_str);
 }
 
-int	ft_copy(char **cmd, char **str)
+int	copy_string_array(char **cmd, char **str)
 {
 	int	i;
 
@@ -100,7 +100,7 @@ int	ft_copy(char **cmd, char **str)
 	return (i);
 }
 
-char	**ft_addstring(char **str, t_lexer *lexer, char **envp)
+char	**add_command_string(char **str, t_lexer *lexer, char **envp)
 {
 	int		cont;
 	t_var	var;
@@ -110,46 +110,18 @@ char	**ft_addstring(char **str, t_lexer *lexer, char **envp)
 	if (str && str[0] && lexer && lexer->data)
 	{
 		if (strcmp(str[0], "export") == 0)
-			var.new_str = ft_expending_word(lexer->data, envp, 0);
+			var.new_str = expand_word_with_variables(lexer->data, envp, 0);
 		else
-			var.new_str = ft_expending_word(lexer->data, envp, 1);
+			var.new_str = expand_word_with_variables(lexer->data, envp, 1);
 	}
 	else
-		var.new_str = ft_expending_word(lexer->data, envp, 1);
-	cont = count_str(str) + count_str(var.new_str);
+		var.new_str = expand_word_with_variables(lexer->data, envp, 1);
+	cont = count_string_array(str) + count_string_array(var.new_str);
 	var.cmd = ft_calloc(sizeof(char *), cont + 1);
 	if (var.cmd == NULL)
 		return (NULL);
 	if (str)
-		var.i = ft_copy(var.cmd, str);
-	ft_copy(&var.cmd[var.i], var.new_str);
+		var.i = copy_string_array(var.cmd, str);
+	copy_string_array(&var.cmd[var.i], var.new_str);
 	return (var.cmd);
-}
-
-char	*ft_itoa(int nb)
-{
-	int		i;
-	char	*p;
-	long	b;
-
-	b = nb;
-	i = ft_len(b);
-	p = gc_malloc(i + 1);
-	if (p == NULL)
-		return (0);
-	p[i] = '\0';
-	if (b < 0)
-	{
-		p[0] = '-';
-		b *= (-1);
-	}
-	if (b == 0)
-		p[i - 1] = 48;
-	while (b > 0)
-	{
-		p[i - 1] = (b % 10) + '0';
-		i--;
-		b /= 10;
-	}
-	return (p);
 }

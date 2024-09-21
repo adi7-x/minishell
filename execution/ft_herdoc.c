@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_herdoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:26 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 17:26:41 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/21 17:22:52 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_herdoc_and_exit(int exit_s, char *str)
 	if (str)
 		printf("%s\n", str);
 	clear_history();
-	cleanup();
+	cleanup_shell();
 	exit(exit_s);
 }
 
@@ -72,7 +72,7 @@ void	open_herdoc(t_file *newfile, char **env)
 			gc_remove_ptr(line);
 			free_herdoc_and_exit(0, NULL);
 		}
-		line = apend_char_str(line, '\n');
+		line = append_char_to_string(line, '\n');
 		if (!newfile->expand)
 			line = expending_herd(line, env);
 		write(newfile->fd[1], line, strlen(line));

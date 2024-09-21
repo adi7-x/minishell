@@ -1,16 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/20 22:38:05 by adbourji          #+#    #+#             */
+/*   Updated: 2024/09/21 17:03:34 by adbourji         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "minishell.h"
 
 t_global	g_global = {NULL, 0, 0, 1};
 
-
-
-
-int	handle_data(t_shell *shell, t_data *data)
+int	execute_data(t_shell *shell, t_data *data)
 {
 	if (ft_herdoc(data, shell->env))
-		return (0);
-	if (check_file1(data) == 1)
 		return (0);
 	handle_command(shell, data);
 	return (1);
@@ -19,7 +26,7 @@ int	process_input_line(t_shell *shell, char *input)
 {
 	t_data	*data;
 
-	if (!check_quotes(input))
+	if (!validate_quotes(input))
 	{
 		printf("syntax error\n");
 		g_global.exit_number = 2;
@@ -30,8 +37,8 @@ int	process_input_line(t_shell *shell, char *input)
 	if (*input)
 	{
 		add_history(input);
-		data = process_input(input, shell);
-		if (data && !handle_data(shell, data))
+		data = convert_input_to_data(input, shell);
+		if (data && !execute_data(shell, data))
 			return (0);
 		free_data(data);
 	}
@@ -62,6 +69,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		gc_remove_ptr(input);
 	}
-	cleanup();
+	cleanup_shell();
 	return (g_global.exit_number);
 }
