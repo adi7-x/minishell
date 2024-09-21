@@ -6,10 +6,9 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 22:38:05 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 17:03:34 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:32:25 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -22,6 +21,7 @@ int	execute_data(t_shell *shell, t_data *data)
 	handle_command(shell, data);
 	return (1);
 }
+
 int	process_input_line(t_shell *shell, char *input)
 {
 	t_data	*data;

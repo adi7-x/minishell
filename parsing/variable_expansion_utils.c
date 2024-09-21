@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 18:51:47 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 19:02:10 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:18:42 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	append_char_to_new_string(char *str, t_var *var)
 		var->i++;
 	else
 	{
-		var->new_str[var->count] = append_char_to_string(var->new_str[var->count],
+		var->new_str[var->count] = append_ctos(var->new_str[var->count],
 				str[var->i]);
 		var->i += 1;
 	}

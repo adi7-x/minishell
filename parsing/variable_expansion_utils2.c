@@ -6,11 +6,33 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 18:44:09 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 19:01:22 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:17:45 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+char	*append_ctos(char *str, char c)
+{
+	int		i;
+	char	*new;
+
+	i = ft_strlen(str);
+	new = gc_malloc(i + 2);
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (str && str[i])
+	{
+		new[i] = str[i];
+		i++;
+	}
+	new[i++] = c;
+	new[i] = '\0';
+	if (str)
+		gc_remove_ptr(str);
+	return (new);
+}
 
 void	init_var(t_var *var)
 {
@@ -42,7 +64,7 @@ void	handle_dollar_sign(t_var *var, char *str, char **envp, int flg)
 	else if (str[var->i + 1] == '?')
 		var->i += handle_exit_status(var);
 	else if (str[var->i + 1] == '\0')
-		var->new_str[var->count] = append_char_to_string(var->new_str[var->count],
+		var->new_str[var->count] = append_ctos(var->new_str[var->count],
 				str[var->i++]);
 }
 
@@ -52,7 +74,7 @@ void	handle_expansion_condition(t_var *var, char *str, char **envp, int flg)
 		handle_dollar_sign(var, str, envp, flg);
 	else if (str[var->i] != '\0')
 		append_char_to_new_string(str, var);
-	if (!var->new_str[0] && (var->double_quote == -1 || var->single_quote ==
-			-1))
+	if (!var->new_str[0] && (var->double_quote == -1
+			|| var->single_quote == -1))
 		var->new_str[0] = append_char_to_string(var->new_str[0], '\0');
 }
