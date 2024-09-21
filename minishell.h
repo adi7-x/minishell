@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 22:41:21 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 18:56:33 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:36:14 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,5 +262,6 @@ void					init_var(t_var *var);
 void					handle_quotes(char c, t_var *var);
 void					handle_dollar_sign(t_var *var, char *str, char **envp,
 							int flg);
+char					*append_ctos(char *str, char c);
 
 #endif
