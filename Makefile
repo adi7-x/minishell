@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
 
 NAME = minishell
 
@@ -34,6 +34,7 @@ SRCS = minishell.c \
       execution/handle_redirections.c \
       execution/errors.c \
       execution/helpers1.c \
+      execution/helpers2.c \
 	execution/cleanup_exe.c \
       execution/execute_builtin.c \
       execution/builtin_export.c \

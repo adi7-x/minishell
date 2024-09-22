@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd_pwd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:29:00 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:53:59 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	builtin_pwd(t_shell *shell)
 {
 	if (shell->cwd[0] != '\0')
 	{
-		write(1, shell->cwd, strlen(shell->cwd));
+		write(1, shell->cwd, ft_strlen(shell->cwd));
 		write(1, "\n", 1);
 		return (0);
 	}
@@ -33,10 +33,10 @@ int	update_pwd_env(t_shell *shell, char *old_pwd)
 	char	**env_copy;
 
 	env_copy = shell->env;
-	while (*env_copy && strncmp(*env_copy, "PWD=", 4) != 0)
+	while (*env_copy && ft_strncmp(*env_copy, "PWD=", 4) != 0)
 		env_copy++;
 	if (*env_copy)
-		strcpy(old_pwd, *env_copy + 4);
+		ft_strcpy(old_pwd, *env_copy + 4);
 	path = getcwd(shell->cwd, sizeof(shell->cwd));
 	if (path)
 	{

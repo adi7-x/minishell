@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_expansion_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:09:20 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:44:54 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ void	handle_variable_expansion_in_heredoc(t_var *var, char *str, char **envp)
 	char	*s;
 
 	s = NULL;
-	if (str[var->i] == '$' && isalpha(str[var->i + 1]))
+	if (str[var->i] == '$' && ft_isalpha(str[var->i + 1]))
 	{
-		while (str[++var->i] && isalnum(str[var->i]))
+		while (str[++var->i] && ft_isalnum(str[var->i]))
 			var->var = append_char_to_string(var->var, str[var->i]);
 	}
 	else if (str[var->i] == '$' && isdigit(str[var->i + 1]))

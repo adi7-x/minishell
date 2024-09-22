@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:59 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:22:07 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,26 +70,26 @@ void	gc_remove_ptr(void *ptr)
 	}
 }
 
-char	*gc_strdup(const char *s)
+char	*gc_strdup(char *s)
 {
 	size_t	len;
 	char	*new_str;
 
-	len = strlen(s) + 1;
+	len = ft_strlen(s) + 1;
 	new_str = gc_malloc(len);
 	if (new_str)
-		memcpy(new_str, s, len);
+		ft_memcpy(new_str, s, len);
 	return (new_str);
 }
 
-char	*gc_strndup(const char *s, size_t n)
+char	*gc_strndup(char *s, size_t n)
 {
 	char	*result;
 
 	result = gc_malloc(n + 1);
 	if (result)
 	{
-		strncpy(result, s, n);
+		ft_strncpy(result, s, n);
 		result[n] = '\0';
 	}
 	return (result);

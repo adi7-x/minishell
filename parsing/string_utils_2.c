@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:39:58 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:49:10 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ char	**add_command_string(char **str, t_lexer *lexer, char **envp)
 	var.i = 0;
 	if (str && str[0] && lexer && lexer->data)
 	{
-		if (strcmp(str[0], "export") == 0)
+		if (ft_strcmp(str[0], "export") == 0)
 			var.new_str = expand_word_with_variables(lexer->data, envp, 0);
 		else
 			var.new_str = expand_word_with_variables(lexer->data, envp, 1);

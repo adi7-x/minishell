@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:34:35 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 17:04:11 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ int	ft_unsetenv(t_shell *shell, char *name)
 	int	len;
 
 	i = 0;
-	len = strlen(name);
+	len = ft_strlen(name);
 	while (shell->env[i])
 	{
-		if (strncmp(shell->env[i], name, len) == 0 && (shell->env[i][len] == '='
-			|| shell->env[i][len] == '\0'))
+		if (ft_strncmp(shell->env[i], name, len) == 0
+			&& (shell->env[i][len] == '=' || shell->env[i][len] == '\0'))
 		{
 			gc_remove_ptr(shell->env[i]);
 			while (shell->env[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:22:45 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:22:07 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ char	*join_strings(char *s1, char *ss2)
 	result = ((char *)gc_malloc(i + j + 1));
 	if (!result)
 		return (NULL);
-	memcpy(result, s1, i);
-	memcpy(result + i, ss2, j);
+	ft_memcpy(result, s1, i);
+	ft_memcpy(result + i, ss2, j);
 	result[i + j] = '\0';
 	return (result);
 }

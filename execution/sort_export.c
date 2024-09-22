@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort_export.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:18:57 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 17:03:04 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ void	print_env_entry(char *entry, t_shell *shell)
 	key = gc_strdup(entry);
 	if (!key)
 		return ;
-	val = strchr(key, '=');
-	if ((shell->ignore_path && strncmp(key, "PATH=", 5) == 0) || strncmp(key,
-			"_=", 2) == 0)
+	val = ft_strchr(key, '=');
+	if ((shell->ignore_path && ft_strncmp(key, "PATH=", 5) == 0)
+		|| ft_strncmp(key, "_=", 2) == 0)
 	{
 		gc_remove_ptr(key);
 		return ;

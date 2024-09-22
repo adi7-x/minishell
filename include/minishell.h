@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 22:41:21 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 21:26:24 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 17:01:50 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "minishell.h"
-# include <stdio.h>
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -24,8 +23,8 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <stdint.h>
+# include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
@@ -136,8 +135,8 @@ char					*expending_herd(char *str, char **env);
 void					*gc_malloc(size_t size);
 void					gc_free_all(void);
 void					gc_remove_ptr(void *ptr);
-char					*gc_strdup(const char *s);
-char					*gc_strndup(const char *s, size_t n);
+char					*gc_strdup(char *s);
+char					*gc_strndup(char *s, size_t n);
 
 void					free_env(t_env *env);
 void					free_files(t_file *file);
@@ -251,6 +250,14 @@ void					free_data(t_data *data);
 int						handle_semicolon(t_lexer **lexer, char *input);
 int						process_syntax_check(t_lexer **lexer);
 int						ft_strlen(char *str);
+int						ft_strcmp(const char *s1, const char *s2);
+int						ft_strncmp(const char *s1, const char *s2, size_t n);
+void					*ft_memset(void *b, int c, size_t len);
+void					*ft_memcpy(void *dst, const void *src, size_t n);
+char					*ft_strcpy(char *dest, const char *src);
+char					*ft_strchr(const char *s, int c);
+int						ft_isalpha(int c);
+int						ft_isalnum(int c);
 int						is_whitespace_char(char c);
 void					*ft_calloc(size_t count, size_t size);
 char					*ft_strncpy(char *dest, char *src, int size);

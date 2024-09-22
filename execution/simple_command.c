@@ -44,12 +44,12 @@ char	*find_command(t_shell *shell, char *cmd)
 
 	if (!cmd || *cmd == '\0')
 		return (NULL);
-	if (strchr(cmd, '/'))
+	if (ft_strchr(cmd, '/'))
 		return (gc_strdup(cmd));
 	i = 0;
-	while (shell->env[i] && strncmp(shell->env[i], "PATH=", 5) != 0)
+	while (shell->env[i] && ft_strncmp(shell->env[i], "PATH=", 5) != 0)
 		i++;
-	if (shell->env[i] && strncmp(shell->env[i], "PATH=", 5) == 0)
+	if (shell->env[i] && ft_strncmp(shell->env[i], "PATH=", 5) == 0)
 		path = shell->env[i] + 5;
 	else
 		path = NULL;
@@ -83,7 +83,7 @@ void	handle_child_process(t_shell *shell, t_data *data)
 	cmd_path = find_command(shell, data->cmd[0]);
 	if (!cmd_path)
 	{
-		write(STDERR_FILENO, data->cmd[0], strlen(data->cmd[0]));
+		write(STDERR_FILENO, data->cmd[0], ft_strlen(data->cmd[0]));
 		write(STDERR_FILENO, ": command not found\n", 20);
 		gc_free_all();
 		exit(127);

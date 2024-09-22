@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setenv.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:22:58 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:57:06 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	handle_append_mode(t_shell *shell, char *key, char *value, int index)
 	char	*old_value;
 	char	*new_value;
 
-	old_value = strchr(shell->env[index], '=');
+	old_value = ft_strchr(shell->env[index], '=');
 	if (old_value)
 	{
 		old_value++;
@@ -71,7 +71,7 @@ int	ft_setenv(t_shell *shell, char *key, char *value, int overwrite)
 	char	**new_env;
 	int		i;
 
-	if (strncmp(key, "PATH", 4) == 0)
+	if (ft_strncmp(key, "PATH", 4) == 0)
 		shell->ignore_path = 0;
 	if (update_existing_env(shell, key, value, overwrite) == 0)
 		return (0);
@@ -92,4 +92,3 @@ int	ft_setenv(t_shell *shell, char *key, char *value, int overwrite)
 	shell->env = new_env;
 	return (0);
 }
-// 001 https://claude.ai/chat/348a0c56-8ff6-4132-b0e9-8c8e2dfe565e

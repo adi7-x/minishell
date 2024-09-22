@@ -22,15 +22,15 @@ int	is_inenv(char **env, char *name)
 
 	i = 0;
 	name_copy = gc_strdup(name);
-	if (strchr(name_copy, '+'))
-		name_copy[strlen(name_copy) - 1] = '\0';
+	if (ft_strchr(name_copy, '+'))
+		name_copy[ft_strlen(name_copy) - 1] = '\0';
 	while (env[i])
 	{
 		key = gc_strdup(env[i]);
-		val = strchr(key, '=');
+		val = ft_strchr(key, '=');
 		if (val)
 			*val = '\0';
-		if (strcmp(key, name_copy) == 0)
+		if (ft_strcmp(key, name_copy) == 0)
 		{
 			gc_remove_ptr(key);
 			return (i);
@@ -47,13 +47,13 @@ int	is_valid_identifier(const char *name)
 	int	i;
 
 	i = 1;
-	if (!isalpha(name[0]) && name[0] != '_')
+	if (!ft_isalpha(name[0]) && name[0] != '_')
 		return (0);
 	while (name[i])
 	{
 		if (name[i] == '+' && name[i + 1] == '\0')
 			break ;
-		if (!isalnum(name[i]) && name[i] != '_')
+		if (!ft_isalnum(name[i]) && name[i] != '_')
 			return (0);
 		i++;
 	}
@@ -64,9 +64,9 @@ void	handle_valid_identifier(t_shell *shell, char *name, char *value)
 {
 	if (value && value[0] != '\0')
 	{
-		if (name[strlen(name) - 1] == '+')
+		if (name[ft_strlen(name) - 1] == '+')
 		{
-			name[strlen(name) - 1] = '\0';
+			name[ft_strlen(name) - 1] = '\0';
 			ft_setenv(shell, name, value, 2);
 		}
 		else
@@ -76,8 +76,8 @@ void	handle_valid_identifier(t_shell *shell, char *name, char *value)
 	}
 	else if (is_inenv(shell->env, name) < 0)
 	{
-		if (name[strlen(name) - 1] == '+')
-			name[strlen(name) - 1] = '\0';
+		if (name[ft_strlen(name) - 1] == '+')
+			name[ft_strlen(name) - 1] = '\0';
 		ft_setenv(shell, name, value, 0);
 	}
 	else if (is_inenv(shell->env, name) >= 0 && value && value[0] == '\0')
@@ -93,8 +93,8 @@ int	process_export_arg(t_shell *shell, char *arg)
 	char	*pluscase;
 
 	name = gc_strdup(arg);
-	value = strchr(name, '=');
-	pluscase = strchr(name, '+');
+	value = ft_strchr(name, '=');
+	pluscase = ft_strchr(name, '+');
 	if (pluscase && *(pluscase + 1) != '=')
 	{
 		printf("bash: export: `%s': not a valid identifier\n", arg);

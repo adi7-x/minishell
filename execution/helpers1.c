@@ -3,14 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   helpers1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:21:22 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 17:05:44 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+char	*ft_strcpy(char *dest, const char *src)
+{
+	int	i;
+
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+char	*ft_strcat(char *dest, const char *src)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (dest[i] != '\0')
+		i++;
+	j = 0;
+	while (src[j] != '\0')
+	{
+		dest[i] = src[j];
+		i++;
+		j++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
 
 char	*strjoin(char *s1, char *s2, char *delimiter)
 {
@@ -20,16 +53,16 @@ char	*strjoin(char *s1, char *s2, char *delimiter)
 	char	*result;
 
 	if (s2 != NULL)
-		len2 = strlen(s2);
+		len2 = ft_strlen(s2);
 	else
 		len2 = 0;
-	len1 = strlen(s1);
-	len_delim = strlen(delimiter);
+	len1 = ft_strlen(s1);
+	len_delim = ft_strlen(delimiter);
 	result = gc_malloc(len1 + len2 + len_delim + 1);
 	if (!result)
 		return (NULL);
-	strcpy(result, s1);
-	strcat(result, delimiter);
+	ft_strcpy(result, s1);
+	ft_strcat(result, delimiter);
 	if (s2)
 		strcat(result, s2);
 	return (result);

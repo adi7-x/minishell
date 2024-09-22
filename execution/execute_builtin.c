@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:54:31 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:52:05 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	is_builtin(char *cmd)
 	i = 0;
 	while (builtins[i])
 	{
-		if (strcmp(cmd, builtins[i]) == 0)
+		if (ft_strcmp(cmd, builtins[i]) == 0)
 			return (1);
 		i++;
 	}
@@ -52,21 +52,21 @@ int	execute_builtin(t_shell *shell, t_data *data)
 {
 	if (data->file && data->file->file_name)
 		handle_redirections(data->file);
-	if (strcmp(data->cmd[0], "echo") == 0)
+	if (ft_strcmp(data->cmd[0], "echo") == 0)
 		return (builtin_echo(data));
-	else if (strcmp(data->cmd[0], "cd") == 0)
+	else if (ft_strcmp(data->cmd[0], "cd") == 0)
 		return (builtin_cd(shell, data));
-	else if (strcmp(data->cmd[0], "pwd") == 0)
+	else if (ft_strcmp(data->cmd[0], "pwd") == 0)
 		return (builtin_pwd(shell));
-	else if (strcmp(data->cmd[0], "export") == 0)
+	else if (ft_strcmp(data->cmd[0], "export") == 0)
 		return (builtin_export(shell, data));
-	else if (strcmp(data->cmd[0], "unset") == 0)
+	else if (ft_strcmp(data->cmd[0], "unset") == 0)
 		return (builtin_unset(shell, data));
-	else if (strcmp(data->cmd[0], "env") == 0)
+	else if (ft_strcmp(data->cmd[0], "env") == 0)
 		return (builtin_env(shell));
-	else if (strcmp(data->cmd[0], "exit") == 0)
+	else if (ft_strcmp(data->cmd[0], "exit") == 0)
 		return (builtin_exit(data));
-	else if (strcmp(data->cmd[0], ".") == 0)
+	else if (ft_strcmp(data->cmd[0], ".") == 0)
 		return (builtin_dot(data));
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion_utils2.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 18:44:09 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:44:54 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ void	handle_quotes(char c, t_var *var)
 
 void	handle_dollar_sign(t_var *var, char *str, char **envp, int flg)
 {
-	if (isalpha(str[var->i + 1]))
+	if (ft_isalpha(str[var->i + 1]))
 	{
-		while (str[++var->i] && isalnum(str[var->i]))
+		while (str[++var->i] && ft_isalnum(str[var->i]))
 			var->var = append_char_to_string(var->var, str[var->i]);
 		expand_environment_variable(var, envp, flg);
 	}
