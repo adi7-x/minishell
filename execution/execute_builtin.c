@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:54:31 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 16:52:05 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 19:46:08 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	builtin_dot(t_data *data)
 int	execute_builtin(t_shell *shell, t_data *data)
 {
 	if (data->file && data->file->file_name)
-		handle_redirections(data->file);
+		handle_redirections(&data->file);
 	if (ft_strcmp(data->cmd[0], "echo") == 0)
 		return (builtin_echo(data));
 	else if (ft_strcmp(data->cmd[0], "cd") == 0)

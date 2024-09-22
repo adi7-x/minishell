@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 22:41:21 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 18:58:19 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 19:46:49 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ void					close_pipes(int **pipes, int cmd_count);
 void					setup_child_pipes(int **pipes, int i, int cmd_count);
 
 char					*find_command(t_shell *shell, char *cmd);
-int						handle_redirections(t_file *file);
+int						handle_redirections(t_file **file);
 int						is_builtin(char *cmd);
 int						execute_builtin(t_shell *shell, t_data *data);
 int						builtin_export(t_shell *shell, t_data *data);

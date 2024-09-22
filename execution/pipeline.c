@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:51:28 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 16:14:08 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 19:46:33 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	exec_child_process(t_shell *shell, t_data *current)
 
 	g_global.is_main_shell = 0;
 	exit_code = 0;
-	if (current->file && handle_redirections(current->file) == -1)
+	if (current->file && handle_redirections(&current->file) == -1)
 	{
 		print_error_not_such_file(current->file->file_name);
 		exit(1);

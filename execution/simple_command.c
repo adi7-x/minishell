@@ -70,7 +70,7 @@ void	handle_child_process(t_shell *shell, t_data *data)
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	if (data->file && handle_redirections(data->file) == -1)
+	if (data->file && handle_redirections(&data->file) == -1)
 	{
 		print_error_not_such_file(data->file->file_name);
 		exit(1);

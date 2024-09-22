@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:18:56 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 16:14:08 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 19:48:04 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,26 +56,27 @@ int	handle_append(t_file *file)
 	return (0);
 }
 
-int	handle_redirections(t_file *file)
+int	handle_redirections(t_file **file)
 {
 	t_file	*current;
 	int		result;
 
-	current = file;
+	current = *file;
 	while (current)
 	{
 		if (current->heredoc)
 			result = handle_heredoc(current);
-		else if (current->infile)
-			result = handle_infile(current);
 		else if (current->outfile)
 			result = handle_outfile(current);
+		else if (current->infile)
+			result = handle_infile(current);
 		else if (current->append)
 			result = handle_append(current);
 		else if (current->ambiguous)
 			result = handle_ambiguous_redirect(current);
 		else
 			result = 0;
+		*file = current;
 		if (result == -1 || result == -2)
 			return (result);
 		current = current->next;

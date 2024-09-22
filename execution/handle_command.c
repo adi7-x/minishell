@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 11:04:55 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 16:14:08 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 19:46:19 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	handle_builtin(t_shell *shell, t_data *data)
 
 	stdin_backup = dup(STDIN_FILENO);
 	stdout_backup = dup(STDOUT_FILENO);
-	if (handle_redirections(data->file) == -1)
+	if (handle_redirections(&data->file) == -1)
 	{
 		write(STDERR_FILENO, "bash: ", 6);
 		write(STDERR_FILENO, data->file->file_name,
