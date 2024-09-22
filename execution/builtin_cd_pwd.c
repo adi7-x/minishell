@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:29:00 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 18:57:48 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:44:23 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ int	builtin_cd(t_shell *shell, t_data *data)
 
 	if (data->cmd[1] && data->cmd[1][0] == '\0')
 		return (0);
-	if (data->cmd[1] == NULL)
+	if (data->cmd[1] == NULL )
 	{
-		path = getenv("HOME");
+		path = get_environment_variable(shell->env, "HOME");
 		if (!path)
 		{
 			write(2, "cd: HOME not set\n", 17);
