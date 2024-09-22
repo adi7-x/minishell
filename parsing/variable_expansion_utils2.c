@@ -66,6 +66,11 @@ void	handle_dollar_sign(t_var *var, char *str, char **envp, int flg)
 	else if (str[var->i + 1] == '\0')
 		var->new_str[var->count] = append_ctos(var->new_str[var->count],
 				str[var->i++]);
+	else
+	{
+		var->new_str[0] = append_char_to_string(var->new_str[0], str[var->i]);
+		var->i++;
+	}
 }
 
 void	handle_expansion_condition(t_var *var, char *str, char **envp, int flg)
