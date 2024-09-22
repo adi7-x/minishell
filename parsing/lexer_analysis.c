@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_analysis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:02:17 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 19:46:42 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 int	is_token_character(char c, int *single_quote_state, int *double_quote_state)
 {

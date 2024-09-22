@@ -6,11 +6,11 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:09:20 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 18:20:41 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 int	handle_exit_status_in_heredoc(t_var *var)
 {

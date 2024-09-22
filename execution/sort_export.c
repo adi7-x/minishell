@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   sort_export.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:18:57 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/21 18:54:23 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 void	bubble_sort(char **arr, int n)
 {

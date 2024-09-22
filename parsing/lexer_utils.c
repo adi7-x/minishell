@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:16:10 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 19:46:59 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 int	handle_word(t_lexer **lexer, char *len)
 {

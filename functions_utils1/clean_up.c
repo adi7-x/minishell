@@ -6,11 +6,11 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:07:41 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/16 22:15:15 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:04:25 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 void	free_lexer(t_lexer *lexer)
 {

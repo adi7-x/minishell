@@ -6,11 +6,11 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 22:38:05 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/21 19:32:25 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:59:18 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "include/minishell.h"
 
 t_global	g_global = {NULL, 0, 0, 1};
 

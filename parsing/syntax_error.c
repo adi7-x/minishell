@@ -6,20 +6,20 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:08:15 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/20 09:13:14 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/22 16:00:52 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 int	validate_syntax(t_lexer *lexer)
 {
 	while (lexer->next)
 	{
 		if (lexer->type == TOKEN_PIPE && (lexer->prev == NULL
-				|| strlen(lexer->data) > 1))
+				|| ft_strlen(lexer->data) > 1))
 			return (1);
-		else if (lexer->type != TOKEN_WORD && strlen(lexer->data) > 2)
+		else if (lexer->type != TOKEN_WORD && ft_strlen(lexer->data) > 2)
 			return (1);
 		lexer = lexer->next;
 		if (lexer->type != TOKEN_WORD && lexer->prev->type != TOKEN_WORD
@@ -28,7 +28,7 @@ int	validate_syntax(t_lexer *lexer)
 		if (lexer->type == TOKEN_PIPE && lexer->prev->type != TOKEN_WORD)
 			return (1);
 	}
-	if (lexer->type != TOKEN_WORD && strlen(lexer->data) >= 2)
+	if (lexer->type != TOKEN_WORD && ft_strlen(lexer->data) >= 2)
 		return (1);
 	else if (lexer->type != TOKEN_WORD)
 		return (1);

@@ -5,6 +5,8 @@ NAME = minishell
 
       
 SRCS = minishell.c \
+      functions_utils1/clean_up.c \
+      functions_utils1/functions_utils.c \
       parsing/string_utils_2.c \
       parsing/string_utils.c \
       parsing/variable_expansion_utils.c \
@@ -18,8 +20,6 @@ SRCS = minishell.c \
       parsing/lexer_utils.c \
       parsing/variable_expansion.c \
       parsing/variable_expansion_utils2.c \
-      clean_up.c \
-      functions_utils.c \
       execution/ft_herdoc.c \
       execution/garbage_collector.c \
       execution/pipeline.c \

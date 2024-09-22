@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_utilis.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 15:46:15 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/20 17:28:31 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 void	setup_child_pipes(int **pipes, int i, int cmd_count)
 {
