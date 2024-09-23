@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:39:58 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 22:58:01 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/23 14:46:13 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,24 +67,23 @@ char	**concatenate_strings(char **str, char **str1)
 	t_var	var;
 
 	var.i = 0;
-	var.j = 0;
+	var.j = -1;
 	var.count = count_string_array(str) + count_string_array(str1);
 	var.new_str = ft_calloc(sizeof(char *), var.count + 1);
 	if (!var.new_str)
 		return (NULL);
 	while (str && str[var.i])
-	{
-		var.new_str[var.j++] = gc_strdup(str[var.i++]);
-		if (!var.new_str[var.j])
-			return (NULL);
-	}
-	var.i = 0;
-	while (str1 && str1[var.i])
-	{
+		var.new_str[++var.j] = gc_strdup(str[var.i++]);
+	if (var.j == -1)
+		var.j = 0;
+	var.var = join_strings(var.new_str[var.j], str1[0]);
+	if (var.new_str[var.j])
+		gc_remove_ptr(var.new_str[var.j]);
+	var.new_str[var.j] = var.var;
+	var.j++;
+	var.i = 1;
+	while (str1 && str1[0] && str1[var.i])
 		var.new_str[var.j++] = gc_strdup(str1[var.i++]);
-		if (!var.new_str[var.j])
-			return (NULL);
-	}
 	return (var.new_str);
 }
 

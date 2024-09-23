@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 18:44:09 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/23 11:17:38 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/23 14:32:18 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	handle_expansion_condition(t_var *var, char *str, char **envp, int flg)
 		handle_dollar_sign(var, str, envp, flg);
 	else if (str[var->i] != '\0')
 		append_char_to_new_string(str, var);
-	if (!var->new_str[0] && (var->double_quote == -1
+	if (!var->new_str && (var->double_quote == -1
 			|| var->single_quote == -1))
 		var->new_str[0] = append_char_to_string(var->new_str[0], '\0');
 }
