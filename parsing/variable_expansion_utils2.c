@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion_utils2.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 18:44:09 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 22:58:10 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:17:38 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	handle_dollar_sign(t_var *var, char *str, char **envp, int flg)
 			var->var = append_char_to_string(var->var, str[var->i]);
 		expand_environment_variable(var, envp, flg);
 	}
-	else if (isdigit(str[var->i + 1]))
+	else if (ft_isdigit(str[var->i + 1]))
 		var->i += 2;
 	else if (str[var->i + 1] == '?')
 		var->i += handle_exit_status(var);

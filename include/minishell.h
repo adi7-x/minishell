@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 22:41:21 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 23:04:06 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:18:12 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "minishell.h"
-# include <stdio.h>
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -24,6 +23,7 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <stdint.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/wait.h>
@@ -258,6 +258,7 @@ char					*ft_strcpy(char *dest, const char *src);
 char					*ft_strchr(const char *s, int c);
 int						ft_isalpha(int c);
 int						ft_isalnum(int c);
+int						ft_isdigit(int c);
 int						is_whitespace_char(char c);
 void					*ft_calloc(size_t count, size_t size);
 char					*ft_strncpy(char *dest, char *src, int size);

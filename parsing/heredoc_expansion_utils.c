@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:09:20 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 18:55:56 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:21:15 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ int	handle_exit_status_in_heredoc(t_var *var)
 	return (2);
 }
 
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
 void	handle_variable_expansion_in_heredoc(t_var *var, char *str, char **envp)
 {
 	char	*path;
@@ -37,7 +44,7 @@ void	handle_variable_expansion_in_heredoc(t_var *var, char *str, char **envp)
 		while (str[++var->i] && ft_isalnum(str[var->i]))
 			var->var = append_char_to_string(var->var, str[var->i]);
 	}
-	else if (str[var->i] == '$' && isdigit(str[var->i + 1]))
+	else if (str[var->i] == '$' && ft_isdigit(str[var->i + 1]))
 		var->i += 2;
 	else if (str[var->i] != '\0')
 	{
