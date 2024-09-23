@@ -1,4 +1,4 @@
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 
 NAME = minishell
@@ -35,7 +35,7 @@ SRCS = minishell.c \
 	  execution/errors.c \
 	  execution/helpers1.c \
 	  execution/helpers2.c \
-	execution/cleanup_exe.c \
+	  execution/cleanup_exe.c \
 	  execution/execute_builtin.c \
 	  execution/builtin_export.c \
 	  execution/builtin_cd_pwd.c \
