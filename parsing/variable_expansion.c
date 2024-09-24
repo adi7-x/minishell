@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 18:52:49 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/24 21:40:43 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ char	**expand_word_with_variables(char *str, char **envp, int flg)
 	while (str[var.i])
 	{
 		var.var = NULL;
-		handle_quotes(str[var.i], &var); // ila kan sinqQ MAKIEXPANDACH
+		handle_quotes(str[var.i], &var);
 		handle_expansion_condition(&var, str, envp, flg);
-		// printf("here\n");
 	}
 	return (var.new_str);
 }

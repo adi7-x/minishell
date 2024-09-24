@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
+/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 09:39:58 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/23 14:46:13 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/24 21:39:45 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int	copy_string_array(char **cmd, char **str)
 	}
 	return (i);
 }
-
 
 char	**add_command_string(char **str, t_lexer *lexer, char **envp)
 {

@@ -6,13 +6,12 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 18:51:47 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 15:58:03 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/24 21:39:16 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// this function just for give the flag 1 or 0 deppanent zach kyn f export ila kan f export maghhdich itsplita
 void	check_for_variable_expansion(char *str, t_var *var)
 {
 	int	i;

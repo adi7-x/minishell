@@ -6,7 +6,7 @@
 /*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 18:27:15 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 19:02:28 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/24 21:40:14 by adbourji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,18 @@ t_data	*parse_lexer_to_data(t_lexer *lexer, char **envp)
 	var.file = NULL;
 	while (lexer)
 	{
-		if (lexer->type == TOKEN_WORD && lexer->prev == NULL) // hna 3rafnha command kanzidoha f 2d string
+		if (lexer->type == TOKEN_WORD && lexer->prev == NULL)
 			var.cmd = add_command_string(var.cmd, lexer, envp);
 		else if (lexer->type == TOKEN_WORD && lexer->prev->type != TOKEN_WORD
 			&& lexer->prev->type != TOKEN_PIPE)
 			handle_file_redirection(lexer, lexer->prev->type, &var.file, envp);
-		else if (lexer->type == TOKEN_PIPE) // hna kan9asmo input 3la 2 ila kan |
+		else if (lexer->type == TOKEN_PIPE)
 			add_parsed_data(&data, &var.file, &var.cmd);
 		else if (lexer->type == TOKEN_WORD)
 			var.cmd = add_command_string(var.cmd, lexer, envp);
 		lexer = lexer->next;
 	}
-	add_parsed_data(&data, &var.file, &var.cmd); // hna kankhado data ba3dma 3amrnaha
+	add_parsed_data(&data, &var.file, &var.cmd);
 	free_lexer(var.lexer);
 	return (data);
 }
@@ -75,7 +75,6 @@ t_data	*convert_input_to_data(char *input, t_shell *shell)
 	if (!lexer_output)
 		return (NULL);
 	data = parse_lexer_to_data(lexer_output, shell->env);
-	// printf("%s \n", data->cmd[0]);
 	if (!data)
 	{
 		free_lexer(lexer_output);
