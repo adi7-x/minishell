@@ -100,6 +100,7 @@ int	copy_string_array(char **cmd, char **str)
 	return (i);
 }
 
+
 char	**add_command_string(char **str, t_lexer *lexer, char **envp)
 {
 	int		cont;

@@ -23,8 +23,9 @@ char	**expand_word_with_variables(char *str, char **envp, int flg)
 	while (str[var.i])
 	{
 		var.var = NULL;
-		handle_quotes(str[var.i], &var);
+		handle_quotes(str[var.i], &var); // ila kan sinqQ MAKIEXPANDACH
 		handle_expansion_condition(&var, str, envp, flg);
+		// printf("here\n");
 	}
 	return (var.new_str);
 }

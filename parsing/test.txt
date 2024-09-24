@@ -1,0 +1,4 @@
+cat file.txt -e //file.txt and -e its args for cat command
+
+
+cat file.txt 

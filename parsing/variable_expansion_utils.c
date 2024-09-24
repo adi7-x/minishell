@@ -12,6 +12,7 @@
 
 #include "../include/minishell.h"
 
+// this function just for give the flag 1 or 0 deppanent zach kyn f export ila kan f export maghhdich itsplita
 void	check_for_variable_expansion(char *str, t_var *var)
 {
 	int	i;
