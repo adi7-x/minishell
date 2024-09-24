@@ -98,6 +98,7 @@ int	execute_command(t_shell *shell, t_data *data)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 1);
