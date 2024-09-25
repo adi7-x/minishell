@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 13:18:56 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 19:48:04 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/25 15:13:43 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 int	handle_heredoc(t_file *file)
 {
 	dup2(file->fd[0], STDIN_FILENO);
-	close(file->fd[0]);
-	close(file->fd[1]);
 	return (0);
 }
 
