@@ -67,8 +67,5 @@ fclean: clean
 
 re: fclean all
 
-cl:
-	@make $(NAME) && make clean && clear && ./$(NAME)
-
 valgrind: $(NAME)
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline.supp -s ./$(NAME)
