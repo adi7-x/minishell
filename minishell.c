@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adbourji <adbourji@student.42.fr>          +#+  +:+       +#+        */
+/*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 22:38:05 by adbourji          #+#    #+#             */
-/*   Updated: 2024/09/22 15:59:18 by adbourji         ###   ########.fr       */
+/*   Updated: 2024/09/27 10:13:40 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ t_global	g_global = {NULL, 0, 0, 1};
 int	execute_data(t_shell *shell, t_data *data)
 {
 	if (ft_herdoc(data, shell->env))
+	{
+		signal(SIGINT, sigint_handler);
 		return (0);
+	}
 	handle_command(shell, data);
 	return (1);
 }

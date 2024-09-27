@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 11:51:28 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/22 19:46:33 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/27 09:56:58 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,6 @@ int	execute_pipeline(t_shell *shell, t_data *data)
 	cmd_count = count_commands(data);
 	create_pipes(&pipes, cmd_count);
 	pids = gc_malloc(cmd_count * sizeof(pid_t));
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
 	fork_and_execute(shell, data, pipes, pids);
 	close_pipes(pipes, cmd_count);
 	last_status = wait_for_children(pids, cmd_count);
