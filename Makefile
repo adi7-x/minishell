@@ -20,7 +20,7 @@ SRCS = minishell.c \
 	  parsing/lexer_utils.c \
 	  parsing/variable_expansion.c \
 	  parsing/variable_expansion_utils2.c \
-	  execution/ft_herdoc.c \
+	  execution/herdoc.c \
 	  execution/garbage_collector.c \
 	  execution/pipeline.c \
 	  execution/pipeline_utilis.c \
