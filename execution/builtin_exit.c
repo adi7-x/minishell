@@ -6,7 +6,7 @@
 /*   By: elcid <elcid@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 19:23:25 by elcid             #+#    #+#             */
-/*   Updated: 2024/09/28 12:29:02 by elcid            ###   ########.fr       */
+/*   Updated: 2024/09/29 11:35:19 by elcid            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ long long	custom_atoi(char *str, int *error)
 	result = 0;
 	sign = 1;
 	*error = 0;
+	while(*str == ' ' || (*str >= 9 && *str <= 13))
+		str++;
 	if (*str == '-' && str++)
 		sign = -1;
 	else if (*str == '+')
